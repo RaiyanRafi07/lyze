@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>scene probe</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #06090f; }
+      #stage { position: fixed; inset: 0; }
+      #log { position: fixed; left: 8px; top: 8px; color: #8fa; font: 12px monospace; z-index: 2; }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <div id="log">booting</div>
+    <script type="module">
+      import { createViewer } from './index.js'
+
+      const THEME = { bg: '#070b16', panel: '#0d1526', text: '#e8eefc', dim: '#7f90ae', accent: '#5ee7ff', ok: '#57e39a', warn: '#ffc65c', bad: '#ff6b81' }
+      const log = document.getElementById('log')
+      const errors = []
+      window.addEventListener('error', (event) => errors.push((event.message || 'error') + ':' + event.lineno))
+      window.addEventListener('unhandledrejection', (event) => errors.push('rejection:' + String(event.reason)))
+
+      const kind = new URLSearchParams(location.search).get('kind') || 'tree'
+
+      const SCENES = {
+        array: {
+          kind: 'array',
+          title: 'array probe',
+          layout: { values: [2, 7, 11, 15] },
+          frames: [
+            { label: 'start', note: 'four values', state: { pointers: { i: 0 }, highlights: {}, window: [0, 3], seen: {} } },
+            { label: 'store 2', note: 'store value 2', state: { pointers: { i: 0, j: 3 }, highlights: { 0: 'ok', 3: 'warn' }, window: [1, 2], seen: { 2: 0 } } },
+            { label: 'found', note: 'pair found', state: { pointers: { i: 1 }, highlights: { 0: 'ok', 1: 'accent' }, seen: { 2: 0 } } },
+          ],
+        },
+        tree: {
+          kind: 'tree',
+          title: 'tree probe',
+          layout: {
+            nodes: [
+              { id: 0, value: 1, x: 0, y: 1.15, z: 0.16 },
+              { id: 1, value: 2, x: 0, y: -0.13, z: -0.56 },
+              { id: 2, value: 3, x: -0.9, y: -1.41, z: -1.28 },
+            ],
+            edges: [[0, 1], [1, 2]],
+          },
+          frames: [
+            { label: 'a', note: 'root', state: { visited: [], frontier: [0], path: [] } },
+            { label: 'b', note: 'visit root', state: { current: 0, visited: [0], frontier: [1], path: [0] } },
+            { label: 'c', note: 'all', state: { current: 2, visited: [0, 1, 2], frontier: [], path: [0, 1, 2] } },
+          ],
+        },
+        graph: {
+          kind: 'graph',
+          title: 'graph probe',
+          layout: {
+            nodes: [
+              { id: 0, label: 'A', x: -1.2, y: 0.8, z: 0 },
+              { id: 1, label: 'B', x: 1.1, y: 0.9, z: 0.3 },
+              { id: 2, label: 'C', x: 0, y: -0.9, z: -0.4 },
+              { id: 3, label: 'D', x: 1.6, y: -1.2, z: 0.6 },
+            ],
+            edges: [[0, 1], [1, 2], [2, 0], [2, 3]],
+            directed: false,
+          },
+          frames: [
+            { label: 'a', note: 'start at A', state: { current: 0, visited: [], frontier: [0], path: [] } },
+            { label: 'b', note: 'wavefront', state: { current: 1, visited: [0], frontier: [1, 2], path: [0, 1] } },
+            { label: 'c', note: 'done', state: { current: 3, visited: [0, 1, 2, 3], frontier: [], path: [0, 2, 3] } },
+          ],
+        },
+        grid: {
+          kind: 'grid',
+          title: 'grid probe',
+          layout: { rows: 4, cols: 5, cells: [[0, 0, 0, 1, 0], [0, 1, 0, 1, 0], [0, 1, 0, 0, 0], [0, 0, 0, 1, 0]] },
+          frames: [
+            { label: 'a', note: 'terrain', state: { current: [0, 0], filled: [], path: [], blocked: [[0, 3], [1, 1], [1, 3], [2, 1], [3, 3]] } },
+            { label: 'b', note: 'filling', state: { current: [1, 2], filled: [[0, 0], [0, 1], [1, 0]], path: [[0, 0], [0, 1], [1, 1]] } },
+            { label: 'c', note: 'full', state: { current: [3, 2], filled: [[0, 0], [0, 1], [1, 0], [2, 2], [3, 2]], path: [[0, 0], [1, 0], [2, 0]] } },
+          ],
+        },
+        'linked-list': {
+          kind: 'linked-list',
+          title: 'list probe',
+          layout: { values: [1, 2, 3, 4, 5] },
+          frames: [
+            { label: 'a', note: 'chain', state: { pointers: { curr: 0 }, removed: [] } },
+            { label: 'b', note: 'reverse', state: { pointers: { prev: 0, curr: 1, next: 2 }, removed: [] } },
+            { label: 'c', note: 'cut', state: { pointers: { prev: 2, curr: 3 }, removed: [1] } },
+          ],
+        },
+        stack: {
+          kind: 'stack',
+          title: 'stack probe',
+          layout: { capacity: 6 },
+          frames: [
+            { label: 'a', note: 'push', state: { items: [1, 2], op: 'push' } },
+            { label: 'b', note: 'peek', state: { items: [1, 2, 3], op: 'peek' } },
+            { label: 'c', note: 'pop', state: { items: [1, 2], op: 'pop' } },
+          ],
+        },
+      }
+
+      try {
+        const viewer = createViewer(document.getElementById('stage'), { theme: THEME })
+        const scene = SCENES[kind] || SCENES.tree
+        viewer.setScene(scene)
+        viewer.goTo(1)
+        setTimeout(() => {
+          const canvas = document.querySelector('#stage canvas')
+          log.textContent = (errors.length ? 'ERR ' + errors.join(' || ') : 'ok ' + kind) + ' canvas=' + (canvas ? canvas.width + 'x' + canvas.height : 'none')
+        }, 700)
+      } catch (error) {
+        log.textContent = 'THROW ' + error.message
+      }
+    </script>
+  </body>
+</html>
