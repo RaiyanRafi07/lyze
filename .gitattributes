@@ -11,3 +11,14 @@
 *.ico binary
 *.ttf binary
 *.rgba binary
+
+# Language stats: the shipped product is Rust (desktop/crates/*).
+# JS is fixture/reference tooling the app never runs; JSON is dataset/curriculum data.
+# Mark them vendored/generated so GitHub Linguist excludes them and Rust shows first.
+plugin/web/engine/** linguist-vendored
+plugin/host/** linguist-vendored
+desktop/fixtures/** linguist-vendored
+plugin/data/** linguist-generated linguist-vendored
+desktop/lessons/** linguist-generated linguist-vendored
+docs/*.json linguist-generated linguist-vendored
+reports/*.json linguist-generated linguist-vendored
