@@ -3,10 +3,11 @@ desktop/target/
 *.zip
 *.exe
 
-# ui-loop run artifacts (baselines are tracked)
-.workers/jobs/ui-loop/shots/
-.workers/jobs/ui-loop/diffs/
-.workers/jobs/ui-loop/latest.json
+# ui-loop + agent scratch (kept on disk, never committed)
+.workers/
+reports/
+__pycache__/
+*.pyc
 
 # local user data: real progress, drafts, solved code — never commit
 plugin/data/progress.json

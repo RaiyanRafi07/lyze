@@ -1,40 +1,63 @@
-# Lyze — native LeetCode Lab desktop app
+# Lyze
 
-A fast, offline, native desktop app for grinding LeetCode: browse 2,913
-problems, solve in Java or C++ with a real bundled judge, watch
-step-by-step visual walkthroughs, and drill deterministic Practice variants
-with spaced-repetition tracking. No browser, no WebView, no account, no
-network — one 17 MB executable plus bundled toolchains.
+![Release](https://img.shields.io/github/v/release/RaiyanRafi07/lyze)
+![Windows](https://img.shields.io/badge/Windows-x64-blue)
+![Rust](https://img.shields.io/badge/Rust-1.89-orange)
+![License](https://img.shields.io/github/license/RaiyanRafi07/lyze)
 
-![Home — catalog, path, ladder](.workers/jobs/ui-loop/baselines/baseline_home.png)
-![Solve — statement, editor, verdict](.workers/jobs/ui-loop/baselines/baseline_fixcheck.png)
+A fast, offline desktop app for actually grinding LeetCode. Browse 2,913 problems, solve in Java or C++ with a real local judge, watch step-by-step visual walkthroughs, and drill Practice variants. No browser, no WebView, no account, no network — just one ~17 MB exe plus bundled toolchains.
 
-## Install (Windows)
+![Home — catalog, path, ladder](docs/screenshots/home.png)
+![Solve — statement, editor, verdict](docs/screenshots/solve.png)
 
-No installer needed. Grab the portable build from **Releases**
-(`LeetCodeLab-win-x64.zip`), unzip anywhere **without spaces in the path**
-(e.g. `C:\Lyze` — the bundled MinGW driver cannot parse spaced paths),
-and run `LeetCodeLab/leetlab-app.exe`. First launch creates its profile
-under `%LOCALAPPDATA%\LeetCodeLab`.
+## Download
+
+Grab it from [**Releases**](https://github.com/RaiyanRafi07/lyze/releases) — download `LeetCodeLab-win-x64.zip`, unzip anywhere, run `LeetCodeLab/leetlab-app.exe`.
+
+A couple things I learned the hard way:
+
+- Unzip somewhere **without spaces in the path** (e.g. `C:\Lyze`). The bundled MinGW driver doesn't like spaced paths.
+- First launch creates its profile under `%LOCALAPPDATA%\LeetCodeLab`. Your progress and drafts stay on your machine.
+
+No installer, no admin needed.
+
+## Why I built this
+
+I was tired of grinding in a browser tab — slow, distracting, and useless on a plane. I wanted something that opens instantly, judges code for real with `javac` / `g++`, and shows me what's actually happening with visualizations instead of just "Wrong Answer."
+
+So Lyze is native Rust (Iced), fully offline. The problem set, walkthroughs, and NeetCode track ship with the app.
+
+## Features
+
+- **2,913 problems** offline — full catalog with search and filters
+- **Real judging** — Java + C++ compiled and run locally, not mocked
+- **Learn mode** — 150 NeetCode walkthroughs with step frames tied to reference code lines
+- **Practice mode** — 3 graded drills per lesson + fallback for every other judge-backed problem
+- **Progress + drafts** — spaced repetition tracking, all local in `%LOCALAPPDATA%`
+- **Trace view** — step through execution state visually
+
+![Learn — walkthrough frames](docs/screenshots/learn.png)
+![Practice — graded drills](docs/screenshots/practice.png)
 
 ## Build from source
 
-Requirements: Rust toolchain, x64 Visual Studio Developer PowerShell
-(MSVC linker), JDK + `g++` on `PATH` for the compiler-backed tests.
+You'll need Rust, the x64 MSVC linker, plus JDK and `g++` on `PATH` for the compiler-backed tests.
 
 ```powershell
 cargo fmt --manifest-path desktop/Cargo.toml --all -- --check
 cargo check --manifest-path desktop/Cargo.toml --workspace --locked
+
 # tests need a writable temp dir inside the checkout:
-$env:TMP='desktop/target/cargo-tmp'; $env:TEMP='desktop/target/cargo-tmp'
+$env:TMP='desktop/target/cargo-tmp'
+$env:TEMP='desktop/target/cargo-tmp'
 cargo test --manifest-path desktop/Cargo.toml --workspace --locked
-# headless app gate (no window): state, lessons, Java + C++ judging, cancel/timeout
+
+# headless app gate (no window):
 desktop/packaging/test-headless.ps1
 leetlab-app --check-resources -- "<repo root>"
 ```
 
-Stage a releasable tree + zip (close the app first — Windows locks the
-running exe):
+To make a release zip (close the app first — Windows locks the running exe):
 
 ```powershell
 cargo build --locked --offline --release -p leetlab-app   # run from desktop/
@@ -46,43 +69,37 @@ python desktop/packaging/package.py --os win --stage desktop/target/pkg-win-fina
 
 | Path | What it is |
 |---|---|
-| `desktop/crates/app` | Iced shell: catalog, Solve/Learn/Practice/Settings/Trace, judge, tracer, drafts, progress |
-| `desktop/crates/core` · `learning` | Catalog index/shards/NEETCODE track · lesson fixtures (150 walkthroughs + variants) |
-| `desktop/fixtures/` | Fixture tooling (`export-*.mjs`, `new-problem-check.mjs`) + `catalog-extra.json` v2 |
-| `desktop/lessons/v1/` | Curated overlay specs for judge-null / external lessons |
-| `desktop/packaging/` | `stage.py`, `package.py`, `test-headless.ps1`, `leetlab.iss`, `vendor/` (Temurin JDK + MinGW-w64) |
-| `plugin/data/` | 2,913-problem dataset: `index.json` + `shard-*.json` (**read-only**) |
-| `plugin/web/engine/` | Fixture generators (`walkthrough.js`, `variants.js`, forges). The shipped app never runs this code |
+| `desktop/crates/app` | Iced UI — catalog, Solve / Learn / Practice / Settings / Trace, judge, tracer |
+| `desktop/crates/core` · `learning` | Catalog index/shards/NeetCode track · lesson fixtures |
+| `desktop/fixtures/` | Dev tooling (`export-*.mjs`, `new-problem-check.mjs`) + `catalog-extra.json` |
+| `desktop/lessons/v1/` | Overlay specs for judge-null / external lessons |
+| `desktop/packaging/` | `stage.py`, `package.py`, `test-headless.ps1`, `leetlab.iss`, vendor notes |
+| `plugin/data/` | 2,913-problem dataset (`index.json` + `shard-*.json`, read-only) |
+| `plugin/web/engine/` | Reference fixture generators. Shipped app never runs this code |
 | `plugin/host/judge.js` · `trace.js` | Reference the Rust judge/tracer were ported from |
-| `docs/NEETCODE_150.json` | First-release track membership (read by the app) |
-| `DESIGN.html` | The visual contract: annotated light/dark sheets + pattern invariants + release scope. Open in a browser |
-| `AGENTS.md` | The single agent playbook |
+| `docs/` | `NEETCODE_150.json` track + screenshots + `DESIGN.html` visual spec |
+| `DESIGN.html` | The visual contract — annotated light/dark sheets + patterns. Open in a browser |
 
-## Add a problem
+## Adding a problem
 
-`node desktop/fixtures/new-problem-check.mjs [slug]` is the gate: `READY`
-means the judge spec (mode, signature types, tests) fits the harness and
-the lesson opens + grades today. The full 150-lesson curriculum ships with
-captured frames and 3 graded drills each; every other judge-backed problem
-opens with Solve + grading and an honest fallback — proven by
-`non_curriculum_judge_problems_degrade_gracefully`.
+`node desktop/fixtures/new-problem-check.mjs [slug]` is the gate. `READY` means the judge spec (mode, signature types, tests) fits the harness and the lesson opens + grades today.
 
-Judge types: `int long double float boolean string char int[] long[] double[]
-boolean[] char[] int[][] char[][] string[][] ListNode ListNode[] TreeNode
-Node GraphNode void` (+ `mutates` for void). Modes: `exact unordered float
-any graph`. `Node` has two slug-scoped shapes (graph adjacency vs
-random-pointer pairs) with one harness branch each.
+Judge types: `int long double float boolean string char int[] long[] double[] boolean[] char[] int[][] char[][] string[][] ListNode ListNode[] TreeNode Node GraphNode void` (+ `mutates` for void). Modes: `exact unordered float any graph`.
 
-## Current state
+## Roadmap
 
-First release target: NeetCode 150 + Blind 75 (see `docs/NEETCODE_150.json`).
-Release gate: 134/134 judge parity, full suite green, headless gate green,
-per-slug acceptance before any VERIFIED_COMPLETE claim. Still open:
-interactive smoke pass, clean-room installs, Inno installer, C++ from
-spaced checkouts (use a space-free path).
+- [x] NeetCode 150 + Blind 75 track (`docs/NEETCODE_150.json`)
+- [x] 134/134 judge parity, full suite green, headless gate green
+- [ ] Interactive smoke pass on clean Windows installs
+- [ ] Inno installer
+- [ ] C++ from spaced checkouts (for now use a space-free path)
+
+Per-slug acceptance before I mark anything `VERIFIED_COMPLETE` — no fake greens.
 
 ## Contributing
 
-Read `AGENTS.md` first — one file, one workflow. Keep the app dependency-free
-of browsers, WebViews, and network calls. Never synthesize judge results or
-walkthrough frames; show the documented fallback instead.
+PRs welcome. Open `DESIGN.html` in a browser before touching pixels (it's the visual source of truth), and skim `AGENTS.md` for the workflow. Keep it dependency-free of browsers, WebViews, and network calls. Never fake judge results or walkthrough frames — show the honest fallback instead.
+
+## License
+
+MIT — see [LICENSE](LICENSE). Problems belong to their respective owners; this is a study tool.
