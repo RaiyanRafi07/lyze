@@ -1,0 +1,130 @@
+{
+ "slug": "design-twitter",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "Twitter",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "postTweet",
+      "args": [
+       {
+        "type": "int",
+        "value": "1"
+       },
+       {
+        "type": "int",
+        "value": "5"
+       }
+      ]
+     },
+     {
+      "method": "getNewsFeed",
+      "args": [
+       {
+        "type": "int",
+        "value": "1"
+       }
+      ],
+      "returns": "int[]"
+     },
+     {
+      "method": "follow",
+      "args": [
+       {
+        "type": "int",
+        "value": "1"
+       },
+       {
+        "type": "int",
+        "value": "2"
+       }
+      ]
+     },
+     {
+      "method": "postTweet",
+      "args": [
+       {
+        "type": "int",
+        "value": "2"
+       },
+       {
+        "type": "int",
+        "value": "6"
+       }
+      ]
+     },
+     {
+      "method": "getNewsFeed",
+      "args": [
+       {
+        "type": "int",
+        "value": "1"
+       }
+      ],
+      "returns": "int[]"
+     },
+     {
+      "method": "unfollow",
+      "args": [
+       {
+        "type": "int",
+        "value": "1"
+       },
+       {
+        "type": "int",
+        "value": "2"
+       }
+      ]
+     },
+     {
+      "method": "getNewsFeed",
+      "args": [
+       {
+        "type": "int",
+        "value": "1"
+       }
+      ],
+      "returns": "int[]"
+     }
+    ],
+    "expected": [
+     "null",
+     "[5]",
+     "null",
+     "null",
+     "[6,5]",
+     "null",
+     "[5]"
+    ],
+    "example": 1
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[\"Twitter\",\"postTweet\",\"getNewsFeed\",\"follow\",\"postTweet\",\"getNewsFeed\",\"unfollow\",\"getNewsFeed\"]",
+     "[[],[1,5],[1],[1,2],[2,6],[1],[1,2],[1]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

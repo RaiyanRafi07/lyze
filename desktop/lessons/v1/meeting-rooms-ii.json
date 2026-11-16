@@ -1,0 +1,106 @@
+{
+ "id": 253,
+ "slug": "meeting-rooms-ii",
+ "title": "Meeting Rooms II",
+ "difficulty": "Medium",
+ "topics": [
+  "Array",
+  "Sorting",
+  "Intervals",
+  "Heap"
+ ],
+ "pattern": "intervals",
+ "patterns": [
+  "intervals",
+  "sorting",
+  "heap-topk"
+ ],
+ "premium": false,
+ "description": "Compute the fewest rooms needed for all meeting intervals. Each room hosts at most one meeting at a time. A room ending a meeting at time t is available to another meeting starting at t.",
+ "examples": [
+  {
+   "n": 1,
+   "input": "intervals = [[0,40],[5,10],[15,20]]",
+   "output": "2",
+   "explain": "Two rooms cover the overlap; the third meeting reuses a freed room.",
+   "raw": "Input: intervals = [[0,40],[5,10],[15,20]]\nOutput: 2\nExplanation: Two rooms cover the overlap; the third meeting reuses a freed room."
+  },
+  {
+   "n": 2,
+   "input": "intervals = [[4,9]]",
+   "output": "1",
+   "explain": "A single meeting needs one room.",
+   "raw": "Input: intervals = [[4,9]]\nOutput: 1\nExplanation: A single meeting needs one room."
+  }
+ ],
+ "constraints": [
+  "0 <= intervals.length <= 100000",
+  "0 <= start < end <= 1000000",
+  "touching endpoints share a room"
+ ],
+ "follow_ups": [],
+ "hints": [
+  "Sort by start and track running end times in a min-heap.",
+  "Free every room whose meeting ended at or before the next start.",
+  "The heap size after processing is the answer; an empty schedule needs zero."
+ ],
+ "snippets": {
+  "java": "class Interval {\n    int start;\n    int end;\n    Interval() { this(0, 0); }\n    Interval(int s, int e) { start = s; end = e; }\n}\nclass Solution {\n    public int minMeetingRooms(Interval[] intervals) {\n        return 0;\n    }\n}\n",
+  "cpp": "struct Interval {\n    int start;\n    int end;\n    Interval(): start(0), end(0) {}\n    Interval(int s, int e): start(s), end(e) {} {};\nclass Solution {\npublic:\n    int minMeetingRooms(vector<Interval>& intervals) {\n        return 0;\n    }\n};\n"
+ },
+ "solution": "Sweep starts in order with a min-heap of end times, freeing rooms as meetings end. Peak heap size is the room count.",
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "minMeetingRooms",
+   "params": [
+    {
+     "name": "intervals",
+     "type": "interval[]"
+    }
+   ],
+   "return": "int"
+  },
+  "tests": [
+   {
+    "args": [
+     "[[0,40],[5,10],[15,20]]"
+    ],
+    "expected": "2",
+    "example": 1
+   },
+   {
+    "args": [
+     "[[4,9]]"
+    ],
+    "expected": "1",
+    "example": 2
+   },
+   {
+    "args": [
+     "[]"
+    ],
+    "expected": "0",
+    "example": 3
+   }
+  ]
+ },
+ "provenance": {
+  "kind": "independent-equivalent",
+  "sources": [
+   "https://neetcode.io/problems/meeting-schedule-ii/question?list=neetcode150"
+  ],
+  "note": "Statement authored from the brief for the native port; not copied. Generated tests are labeled. NeetCode uses Interval objects; minMeetingRooms. Interval construction per judge extension."
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[[0,40],[5,10],[15,20]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

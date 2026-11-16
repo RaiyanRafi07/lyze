@@ -1,0 +1,15 @@
+Package: leetlab-lab
+Version: 0.1.2
+Section: education
+Priority: optional
+Architecture: amd64
+Maintainer: LeetCode Lab (local-first study tool)
+Description: Native Rust LeetCode Lab desktop (NeetCode 150)
+ Offline-first Solve/Learn/Practice/Trace with a bundled Temurin 21 JDK
+ and a bundled GCC 11.4.0 C++ toolchain (Ubuntu jammy). No compiler
+ installation, library setup, or PATH changes required; no browser
+ engine, Node runtime, or listening HTTP server is involved at runtime.
+ .
+ Installs to /opt/leetlab-lab with a .desktop entry. Requires glibc 2.35
+ or newer (any Ubuntu 22.04+ x64 system install satisfies this; user-space
+ only, no root-owned toolchain files outside /opt/leetlab-lab).

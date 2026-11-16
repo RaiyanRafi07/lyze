@@ -1,0 +1,120 @@
+# Release worker REPORT — copy-list-with-random-pointer
+
+Scope: ` .workers/jobs/deck-release/lessons/copy-list-with-random-pointer ` only.
+No shared source touched. No credentials / progress / solutions / notes read.
+Browser: shared automation Chromium CDP `http://127.0.0.1:9292`, new Playwright
+context per run, hosted app `http://127.0.0.1:8181/leetcode-lab/`.
+Runner: `python .workers/jobs/deck-release/lesson.py copy-list-with-random-pointer`.
+Browser work finished before this file was written. No inferred browser passes.
+
+## Problem signature (from `/api/problem/copy-list-with-random-pointer`)
+
+- `judge: null` (design / special-structure slug; `Node{val,next,random}`
+  outside host judge vocabulary).
+- Java snippet:
+  `class Solution { public Node copyRandomList(Node head) }`
+  with `Node { int val; Node next; Node random; Node(int val) }`.
+- C++ snippet:
+  `class Solution { public: Node* copyRandomList(Node* head) }`.
+- Practice TEST PROFILE (staged forge
+  `plugin/web/engine/forge-copy-list-with-random-pointer.js`):
+  `copyRandomList(head:string) -> string`, `mode: exact`,
+  list travels as `head = [[val,random_index|null],...]`,
+  return is same encoding of deep copy.
+
+## Worker-authored files (this folder only)
+
+- `Solution.java` — hash-map two-pass deep copy, `Node` signature.
+- `Wrong.java` — compilable, deliberately wrong: `return head;`
+  (shallow / aliasing, would fail any Node judge).
+- `solution.cpp` — `unordered_map<Node*,Node*>` two-pass, `Node*` signature.
+- `Practice1.java` / `Practice2.java` / `Practice3.java` — all
+  `public String copyRandomList(String head)`; parse literal with
+  regex `\[\s*(-?\d+)\s*,\s*(null|-?\d+)\s*\]`, stage by position
+  (identity, never value-keyed), wire `next=pos+1` / `random=map.get(ri)`,
+  re-serialize as `[val,random]` with bare `null`. V1/v2/v3 differ only in
+  comments (fresh lists / edge cases incl. `[]` + self-loop / adversarial
+  duplicate-value + backward-jump + fan-in). Same implementation is correct
+  for all three because forge declares `ruleChange: false` (same task,
+  different data).
+
+## Exact `lesson.py` verdicts (`browser.json`)
+
+```json
+{
+  "solve_correct_java": "No runnable judge for this problem",
+  "solve_wrong_java": "No runnable judge for this problem",
+  "solve_correct_cpp": "No runnable judge for this problem",
+  "learn": "Page.wait_for_function: Timeout 7500ms exceeded.",
+  "practice": "3 cards, verdict Not yet (authored true) on all 3 drills",
+  "mobile_overflow_px": 0,
+  "pageErrors": []
+}
+```
+
+Full payload in `browser.json`.
+
+## Evidence files (this folder)
+
+- `browser.json`
+- `Solution.java` + `Solution.java.png` (shows fallback text, editor with hash-map code)
+- `Wrong.java` + `Wrong.java.png` (same fallback)
+- `solution.cpp` + `solution.cpp.png` (same fallback)
+- `Practice1.java` + `practice-1.png`
+- `Practice2.java` + `practice-2.png`
+- `Practice3.java` + `practice-3.png`
+- `learn-error.png` (Learn fallback UI, no slider/diagram)
+- `mobile.png` (390×844, Learn tab, no horizontal overflow)
+- Manual CDP probes (not saved as images in folder; described below):
+  Learn Input popup reads “This problem has no parsed signature, so the input
+  cannot be edited.” + “This walkthrough needs a complete input. Open Input to
+  provide it.” + “REFERENCE NOT VERIFIED” + “starter code, not a verified
+  reference solution”. Clicking preset `Random` + `Run this input` leaves the
+  same message; no frames, no slider advance.
+
+## What was exercised
+
+- Solve Java correct / wrong + C++ via Solve tab `Run` → all hit explicit
+  fallback `No runnable judge for this problem` + `Ask the tutor to review` +
+  `This problem needs a specialized execution adapter…`. Screenshots prove it.
+  No deterministic grade claimed.
+- Learn via Learn tab → explicit fallback, not playback. `lesson.py` did not
+  return the `fallback` object; it timed out waiting for
+  `Number(document.querySelector('.lc-scrub')?.max) > 0`. Manual CDP confirms
+  the fallback text above, no `.lc-wt-canvas svg` diagram, no reference lines.
+- Practice via Practice tab → 3 local drills rendered (`fresh lists`,
+  `edge cases`, `adversarial shapes`), each `4 generated tests`, each `Try it`
+  → `Run my code` → verdict `Not yet`. Authored code was filled in all three
+  (`authored: true`). Inputs were not wrong (see below).
+- Mobile 390px → `mobile_overflow_px: 0`, `mobile.png` usable, no overflow.
+
+## My inputs were checked, not wrong
+
+Direct `/api/judge` with the same `Practice1.java` and properly quoted string
+transport passes:
+
+- `args: ['"[[7,null],[13,0]]"']`, `expected: '"[[7,null],[13,0]]"'`
+  → `ok:true, passed 1/1, got == expected`.
+- All four v1 forge rows quoted the same way → `passed 4/4`.
+
+So the Java logic (parse → map clone → wire → serialize) is correct. The
+browser `Not yet` comes from the shared forge/judge mismatch, not from worker
+code. No further worker-side input fix is possible (see impossibility note).
+
+## Failures / gaps (compiler/judge/visual/variant)
+
+1. **Solve judge gap (by design).** `judge: null` → Solve tab correctly shows
+   “No runnable judge”. Expectation “positive Java and C++ Solve runs pass,
+   wrong Java fails” is inapplicable here. Both correct and wrong get the
+   identical fallback, so wrong is indistinguishable. Compiler is fine
+   (`javac 20.0.2`, `g++ 14.2.0` per `/api/health`); there is simply no
+   deterministic Node judge.
+2. **Learn visual gap.** Staged adapter
+   `adapter-copy-list-with-random-pointer.js` exists (hash-map two-pass,
+   `MAX_NODES=12`, `2n+2 ≤ 40` frames) but `semantic.js`
+   `buildSemanticWalkthrough` requires `problem.judge.tests[0].args` for
+   default input. With `judge: null` it throws “needs a complete input” before
+   `adapter.build` ever runs. The Learn Input popup then says “no parsed
+   signature, so the input cannot be edited”, so even manual `Random` + `Run`
+   cannot start the walkthrough. Result: `REFERENCE NOT VERIFIED`, starter
+   code only, no diagrams, no `Play`, no `Next step`, `lesson.py` timeout

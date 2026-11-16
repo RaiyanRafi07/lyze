@@ -1,0 +1,5981 @@
+{
+  "version": 1,
+  "lessons": [
+    {
+      "slug": "two-sum",
+      "provenance": {
+        "record": "plugin/data/shard-0.json",
+        "judgeCase": 0,
+        "walkthrough": "plugin/web/engine/walkthrough.js",
+        "practice": "plugin/web/engine/variants.js"
+      },
+      "inputs": [
+        "[2,7,11,15]",
+        "9"
+      ],
+      "expected": "[0,1]",
+      "walkthrough": {
+        "kind": "array",
+        "layout": {
+          "values": [
+            2,
+            7,
+            11,
+            15
+          ]
+        },
+        "frames": [
+          {
+            "step": "init",
+            "label": "Initialize",
+            "note": "Start with an empty map of earlier values.",
+            "state": {
+              "values": [
+                2,
+                7,
+                11,
+                15
+              ],
+              "vars": {
+                "target": 9
+              },
+              "seen": {}
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan",
+            "note": "Take the next value and its index.",
+            "state": {
+              "pointers": {
+                "i": 0
+              },
+              "highlights": {
+                "0": "accent"
+              },
+              "values": [
+                2,
+                7,
+                11,
+                15
+              ],
+              "vars": {
+                "target": 9
+              },
+              "seen": {}
+            }
+          },
+          {
+            "step": "probe",
+            "label": "Probe",
+            "note": "Look for target - nums[i] among earlier values.",
+            "state": {
+              "pointers": {
+                "i": 0
+              },
+              "highlights": {
+                "0": "accent"
+              },
+              "values": [
+                2,
+                7,
+                11,
+                15
+              ],
+              "vars": {
+                "target": 9,
+                "need": 7
+              },
+              "seen": {}
+            }
+          },
+          {
+            "step": "check",
+            "label": "Lookup missed",
+            "note": "The complement is not among earlier values; store the current value next.",
+            "state": {
+              "pointers": {
+                "i": 0
+              },
+              "highlights": {
+                "0": "accent"
+              },
+              "values": [
+                2,
+                7,
+                11,
+                15
+              ],
+              "vars": {
+                "target": 9,
+                "need": 7
+              },
+              "seen": {},
+              "lookup": {
+                "from": 0,
+                "key": "7",
+                "hit": null
+              }
+            }
+          },
+          {
+            "step": "store",
+            "label": "After store",
+            "note": "Remember nums[i] for later complements.",
+            "state": {
+              "pointers": {
+                "i": 0
+              },
+              "highlights": {
+                "0": "dim"
+              },
+              "values": [
+                2,
+                7,
+                11,
+                15
+              ],
+              "vars": {
+                "target": 9,
+                "need": 7
+              },
+              "seen": {
+                "2": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan",
+            "note": "Take the next value and its index.",
+            "state": {
+              "pointers": {
+                "i": 1
+              },
+              "highlights": {
+                "1": "accent"
+              },
+              "values": [
+                2,
+                7,
+                11,
+                15
+              ],
+              "vars": {
+                "target": 9
+              },
+              "seen": {
+                "2": 0
+              }
+            }
+          },
+          {
+            "step": "probe",
+            "label": "Probe",
+            "note": "Look for target - nums[i] among earlier values.",
+            "state": {
+              "pointers": {
+                "i": 1
+              },
+              "highlights": {
+                "1": "accent"
+              },
+              "values": [
+                2,
+                7,
+                11,
+                15
+              ],
+              "vars": {
+                "target": 9,
+                "need": 2
+              },
+              "seen": {
+                "2": 0
+              }
+            }
+          },
+          {
+            "step": "found",
+            "label": "Match found",
+            "note": "Return the earlier index and the current index.",
+            "state": {
+              "pointers": {
+                "i": 1
+              },
+              "highlights": {
+                "0": "ok",
+                "1": "ok"
+              },
+              "values": [
+                2,
+                7,
+                11,
+                15
+              ],
+              "vars": {
+                "target": 9,
+                "need": 2
+              },
+              "seen": {
+                "2": 0
+              },
+              "lookup": {
+                "from": 1,
+                "key": "2",
+                "hit": 0
+              }
+            }
+          }
+        ],
+        "result": [
+          0,
+          1
+        ],
+        "code": {
+          "java": [
+            {
+              "step": "structure",
+              "text": "class Solution {",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "def",
+              "text": "    public int[] twoSum(int[] nums, int target) {",
+              "explain": "The task: find two distinct positions whose values add to the target; exactly one pair exists."
+            },
+            {
+              "step": "init",
+              "text": "        Map<Integer, Integer> seen = new HashMap<>();",
+              "explain": "Start with an empty map of earlier values so only already seen indices can complete a pair and reuse is impossible."
+            },
+            {
+              "step": "scan",
+              "text": "        for (int i = 0; i < nums.length; i++) {",
+              "explain": "Move left to right focusing on one position at a time so every value gets a fair chance as the later partner."
+            },
+            {
+              "step": "probe",
+              "text": "            int need = target - nums[i];",
+              "explain": "Compute the partner needed (target minus current) and look only in the earlier map, since storing first would reuse the same index."
+            },
+            {
+              "step": "check",
+              "text": "            if (seen.containsKey(need)) {",
+              "explain": "Test if the needed partner is already mapped, missing means no earlier pair exists and checking before storing protects distinctness."
+            },
+            {
+              "step": "found",
+              "text": "                return new int[]{seen.get(need), i};",
+              "explain": "Return the earlier mapped index with the current one; safe only because the check ran before the store, so positions differ."
+            },
+            {
+              "step": "structure",
+              "text": "            }",
+              "explain": "End of the partner test: a miss falls through to store the current value for later positions."
+            },
+            {
+              "step": "store",
+              "text": "            seen.put(nums[i], i);",
+              "explain": "Save the current value with its index for future partners, adding only after the check so the same position cannot match itself."
+            },
+            {
+              "step": "structure",
+              "text": "        }",
+              "explain": "End of one pass iteration: the stored value is now visible to every later position."
+            },
+            {
+              "step": "none",
+              "text": "        return new int[]{};",
+              "explain": "Report no pair when the full pass finds nothing, which confirms no pair of distinct positions completes the target."
+            },
+            {
+              "step": "structure",
+              "text": "    }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "}",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            }
+          ],
+          "cpp": [
+            {
+              "step": "structure",
+              "text": "class Solution {",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "public:",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "def",
+              "text": "    vector<int> twoSum(vector<int>& nums, int target) {",
+              "explain": "The task: find two distinct positions whose values add to the target; exactly one pair exists."
+            },
+            {
+              "step": "init",
+              "text": "        unordered_map<int, int> seen;",
+              "explain": "Start with an empty map of earlier values so only already seen indices can complete a pair and reuse is impossible."
+            },
+            {
+              "step": "scan",
+              "text": "        for (int i = 0; i < (int)nums.size(); i++) {",
+              "explain": "Move left to right focusing on one position at a time so every value gets a fair chance as the later partner."
+            },
+            {
+              "step": "probe",
+              "text": "            int need = target - nums[i];",
+              "explain": "Compute the partner needed (target minus current) and look only in the earlier map, since storing first would reuse the same index."
+            },
+            {
+              "step": "check",
+              "text": "            if (seen.count(need)) {",
+              "explain": "Test if the needed partner is already mapped, missing means no earlier pair exists and checking before storing protects distinctness."
+            },
+            {
+              "step": "found",
+              "text": "                return {seen[need], i};",
+              "explain": "Return the earlier mapped index with the current one; safe only because the check ran before the store, so positions differ."
+            },
+            {
+              "step": "structure",
+              "text": "            }",
+              "explain": "End of the partner test: a miss falls through to store the current value for later positions."
+            },
+            {
+              "step": "store",
+              "text": "            seen[nums[i]] = i;",
+              "explain": "Save the current value with its index for future partners, adding only after the check so the same position cannot match itself."
+            },
+            {
+              "step": "structure",
+              "text": "        }",
+              "explain": "End of one pass iteration: the stored value is now visible to every later position."
+            },
+            {
+              "step": "none",
+              "text": "        return {};",
+              "explain": "Report no pair when the full pass finds nothing, which confirms no pair of distinct positions completes the target."
+            },
+            {
+              "step": "structure",
+              "text": "    }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "};",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            }
+          ],
+          "pseudo": [
+            {
+              "step": "def",
+              "text": "function twoSum(nums, target)",
+              "explain": "The task: find two distinct positions whose values add to the target; exactly one pair exists."
+            },
+            {
+              "step": "init",
+              "text": "  seen = empty hash map",
+              "explain": "Start with an empty map of earlier values so only already seen indices can complete a pair and reuse is impossible."
+            },
+            {
+              "step": "scan",
+              "text": "  for i from 0 to length(nums) - 1",
+              "explain": "Move left to right focusing on one position at a time so every value gets a fair chance as the later partner."
+            },
+            {
+              "step": "probe",
+              "text": "    need = target - nums[i]",
+              "explain": "Compute the partner needed (target minus current) and look only in the earlier map, since storing first would reuse the same index."
+            },
+            {
+              "step": "check",
+              "text": "    if seen contains key need",
+              "explain": "Test if the needed partner is already mapped, missing means no earlier pair exists and checking before storing protects distinctness."
+            },
+            {
+              "step": "found",
+              "text": "      return [seen[need], i]",
+              "explain": "Return the earlier mapped index with the current one; safe only because the check ran before the store, so positions differ."
+            },
+            {
+              "step": "check",
+              "text": "    end if",
+              "explain": "End of the partner test: a miss falls through to store the current value for later positions."
+            },
+            {
+              "step": "store",
+              "text": "    seen[nums[i]] = i",
+              "explain": "Save the current value with its index for future partners, adding only after the check so the same position cannot match itself."
+            },
+            {
+              "step": "scan",
+              "text": "  end for",
+              "explain": "End of one pass iteration: the stored value is now visible to every later position."
+            },
+            {
+              "step": "none",
+              "text": "  return []",
+              "explain": "Report no pair when the full pass finds nothing, which confirms no pair of distinct positions completes the target."
+            },
+            {
+              "step": "def",
+              "text": "end function",
+              "explain": "End of the function scope; every return above exits with the pair or the empty result."
+            }
+          ]
+        },
+        "title": "Two Sum",
+        "pattern": "arrays-hashing",
+        "lesson": {
+          "idea": "Scan once and keep a map of earlier values to indices; each value needs target - value to already be present.",
+          "trap": "Storing nums[i] before checking it can reuse the same index, so [3,3] with target 6 could return [0,0].",
+          "time": "O(n)",
+          "space": "O(n)"
+        },
+        "omitted": 0,
+        "detail": null,
+        "explain": {
+          "def": "The task: find two distinct positions whose values add to the target; exactly one pair exists.",
+          "init": "Start with an empty map of earlier values so only already seen indices can complete a pair and reuse is impossible.",
+          "scan": "Move left to right focusing on one position at a time so every value gets a fair chance as the later partner.",
+          "probe": "Compute the partner needed (target minus current) and look only in the earlier map, since storing first would reuse the same index.",
+          "check": "Test if the needed partner is already mapped, missing means no earlier pair exists and checking before storing protects distinctness.",
+          "found": "Return the earlier mapped index with the current one; safe only because the check ran before the store, so positions differ.",
+          "store": "Save the current value with its index for future partners, adding only after the check so the same position cannot match itself.",
+          "none": "Report no pair when the full pass finds nothing, which confirms no pair of distinct positions completes the target."
+        },
+        "languages": [
+          "java",
+          "cpp",
+          "pseudo"
+        ],
+        "source": "problem-adapter"
+      },
+      "practice": [
+        {
+          "id": "v1",
+          "seedLabel": "fresh numbers",
+          "intent": "Same pattern, different numbers so you reproduce the reasoning.",
+          "difficulty": "Easy",
+          "title": "Two Sum — fresh numbers (pair-sum drill)",
+          "statement": "Same pattern, new numbers. You are given an array nums of distinct integers and an integer target; return the indices [i, j], with i < j, of the two values that add up to target. Exactly one such pair exists in every test.",
+          "signature": {
+            "name": "twoSum",
+            "params": [
+              {
+                "name": "nums",
+                "type": "int[]"
+              },
+              {
+                "name": "target",
+                "type": "int"
+              }
+            ],
+            "return": "int[]"
+          },
+          "examples": [
+            {
+              "input": "nums = [20,42,49,28,37], target = 65",
+              "output": "[3,4]",
+              "explain": ""
+            }
+          ],
+          "tests": [
+            {
+              "args": [
+                "[20,42,49,28,37]",
+                "65"
+              ],
+              "expected": "[3,4]"
+            },
+            {
+              "args": [
+                "[32,9,16,25,11,47]",
+                "72"
+              ],
+              "expected": "[3,5]"
+            },
+            {
+              "args": [
+                "[19,37,9,3,43,18,35]",
+                "52"
+              ],
+              "expected": "[2,4]"
+            },
+            {
+              "args": [
+                "[27,32,23,10,22,42,21,13,9]",
+                "53"
+              ],
+              "expected": "[1,6]"
+            }
+          ],
+          "mode": "unordered",
+          "hints": [
+            "The partner each value needs is target minus that value.",
+            "Record the index of every value you have already walked past, then look each partner up directly."
+          ]
+        },
+        {
+          "id": "v2",
+          "seedLabel": "edge cases",
+          "intent": "Same pattern with the edge case the original hides.",
+          "difficulty": "Easy",
+          "title": "Two Sum — edge cases (pair-sum drill)",
+          "statement": "This time the numbers can be negative or zero and the matching pair may sit anywhere in the array. Given nums of 3 to 7 distinct integers and a target, return the indices [i, j], i < j, of the unique two values whose sum equals target. Exactly one pair exists in every test.",
+          "signature": {
+            "name": "twoSum",
+            "params": [
+              {
+                "name": "nums",
+                "type": "int[]"
+              },
+              {
+                "name": "target",
+                "type": "int"
+              }
+            ],
+            "return": "int[]"
+          },
+          "examples": [
+            {
+              "input": "nums = [0,-3,7,2], target = 7",
+              "output": "[0,2]",
+              "explain": ""
+            }
+          ],
+          "tests": [
+            {
+              "args": [
+                "[0,-3,7,2]",
+                "7"
+              ],
+              "expected": "[0,2]"
+            },
+            {
+              "args": [
+                "[-5,-2,-1,-8]",
+                "-10"
+              ],
+              "expected": "[1,3]"
+            },
+            {
+              "args": [
+                "[-5,0,-16,-17,-14]",
+                "-19"
+              ],
+              "expected": "[0,4]"
+            },
+            {
+              "args": [
+                "[-2,-15,13,-6,-12,-1,-5]",
+                "1"
+              ],
+              "expected": "[2,4]"
+            }
+          ],
+          "mode": "unordered",
+          "hints": [
+            "Nothing in the lookup idea assumes positive values.",
+            "Negative targets work the same way — the complement you look up may itself be negative."
+          ]
+        },
+        {
+          "id": "v3",
+          "seedLabel": "twist, same signature",
+          "intent": "Same signature, different question: the twist tests whether the idea transfers.",
+          "difficulty": "Easy",
+          "title": "Two Sum — twist: values (pair-sum drill)",
+          "statement": "Given nums of distinct integers and a target, return the two values themselves that add up to target, ordered smaller first as [a, b]. Do not return indices. Exactly one such pair exists in every test.",
+          "signature": {
+            "name": "twoSum",
+            "params": [
+              {
+                "name": "nums",
+                "type": "int[]"
+              },
+              {
+                "name": "target",
+                "type": "int"
+              }
+            ],
+            "return": "int[]"
+          },
+          "examples": [
+            {
+              "input": "nums = [11,29,-15,31], target = 16",
+              "output": "[-15,31]",
+              "explain": ""
+            }
+          ],
+          "tests": [
+            {
+              "args": [
+                "[11,29,-15,31]",
+                "16"
+              ],
+              "expected": "[-15,31]"
+            },
+            {
+              "args": [
+                "[1,45,5,-13]",
+                "-8"
+              ],
+              "expected": "[-13,5]"
+            },
+            {
+              "args": [
+                "[-13,16,17,30]",
+                "33"
+              ],
+              "expected": "[16,17]"
+            },
+            {
+              "args": [
+                "[27,21,-7,28,35]",
+                "28"
+              ],
+              "expected": "[-7,35]"
+            }
+          ],
+          "mode": "exact",
+          "hints": [
+            "Find the pair exactly as before, then swap the indices for the values behind them.",
+            "The two returned values must be ordered, so compare them once before returning."
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "number-of-islands",
+      "provenance": {
+        "record": "plugin/data/shard-5.json",
+        "judgeCase": 0,
+        "walkthrough": "plugin/web/engine/walkthrough.js",
+        "practice": "plugin/web/engine/variants.js"
+      },
+      "inputs": [
+        "[ [\"1\",\"1\",\"1\",\"1\",\"0\"], [\"1\",\"1\",\"0\",\"1\",\"0\"], [\"1\",\"1\",\"0\",\"0\",\"0\"], [\"0\",\"0\",\"0\",\"0\",\"0\"] ]"
+      ],
+      "expected": "1",
+      "walkthrough": {
+        "kind": "grid",
+        "layout": {
+          "rows": 4,
+          "cols": 5,
+          "cells": [
+            [
+              1,
+              1,
+              1,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        },
+        "frames": [
+          {
+            "step": "init",
+            "label": "Initialize",
+            "note": "rows=4, cols=5, count=0",
+            "state": {
+              "current": null,
+              "cells": [
+                [
+                  1,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [],
+              "reads": [],
+              "frontier": [],
+              "path": [],
+              "answer": 0,
+              "vars": {
+                "islands": 0,
+                "rows": 4,
+                "cols": 5
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (0,0)",
+            "note": "grid[0][0] = 1",
+            "state": {
+              "current": [
+                0,
+                0
+              ],
+              "cells": [
+                [
+                  1,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 0,
+              "vars": {
+                "islands": 0,
+                "cell": 1
+              }
+            }
+          },
+          {
+            "step": "enter",
+            "label": "New island",
+            "note": "Land found; island count is now 1",
+            "state": {
+              "current": [
+                0,
+                0
+              ],
+              "cells": [
+                [
+                  1,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 1
+              }
+            }
+          },
+          {
+            "step": "visit",
+            "label": "Sink land",
+            "note": "1 intermediate event skipped. Marked (0,0) as water",
+            "state": {
+              "current": [
+                0,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "recurse",
+            "label": "Explore neighbors",
+            "note": "Captured 2 adjacent land cell(s) for this DFS call",
+            "state": {
+              "current": [
+                0,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "neighbors": 2,
+                "frontierOwner": [
+                  0,
+                  0
+                ]
+              }
+            }
+          },
+          {
+            "step": "visit",
+            "label": "Sink land",
+            "note": "1 intermediate event skipped. Marked (1,0) as water",
+            "state": {
+              "current": [
+                1,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS enter",
+            "note": "1 intermediate event skipped. Passed bounds and land check at (2,0)",
+            "state": {
+              "current": [
+                2,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "recurse",
+            "label": "Explore neighbors",
+            "note": "1 intermediate event skipped. Captured 1 adjacent land cell(s) for this DFS call",
+            "state": {
+              "current": [
+                2,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  2,
+                  1
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "neighbors": 1,
+                "frontierOwner": [
+                  2,
+                  0
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS blocked",
+            "note": "1 intermediate event skipped. grid[1][0] is water; return",
+            "state": {
+              "current": [
+                1,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "blocked": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "recurse",
+            "label": "Explore neighbors",
+            "note": "2 intermediate events skipped. Captured 1 adjacent land cell(s) for this DFS call",
+            "state": {
+              "current": [
+                2,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  1,
+                  1
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "neighbors": 1,
+                "frontierOwner": [
+                  2,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS enter",
+            "note": "1 intermediate event skipped. Passed bounds and land check at (1,1)",
+            "state": {
+              "current": [
+                1,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "recurse",
+            "label": "Explore neighbors",
+            "note": "1 intermediate event skipped. Captured 1 adjacent land cell(s) for this DFS call",
+            "state": {
+              "current": [
+                1,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "neighbors": 1,
+                "frontierOwner": [
+                  1,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS enter",
+            "note": "1 intermediate event skipped. Passed bounds and land check at (0,1)",
+            "state": {
+              "current": [
+                0,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  1,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "recurse",
+            "label": "Explore neighbors",
+            "note": "1 intermediate event skipped. Captured 1 adjacent land cell(s) for this DFS call",
+            "state": {
+              "current": [
+                0,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  0,
+                  2
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "neighbors": 1,
+                "frontierOwner": [
+                  0,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS enter",
+            "note": "1 intermediate event skipped. Passed bounds and land check at (0,2)",
+            "state": {
+              "current": [
+                0,
+                2
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  1,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS blocked",
+            "note": "2 intermediate events skipped. grid[1][2] is water; return",
+            "state": {
+              "current": [
+                1,
+                2
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "blocked": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "visit",
+            "label": "Sink land",
+            "note": "1 intermediate event skipped. Marked (0,3) as water",
+            "state": {
+              "current": [
+                0,
+                3
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS enter",
+            "note": "1 intermediate event skipped. Passed bounds and land check at (1,3)",
+            "state": {
+              "current": [
+                1,
+                3
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "recurse",
+            "label": "Explore neighbors",
+            "note": "1 intermediate event skipped. Captured 0 adjacent land cell(s) for this DFS call",
+            "state": {
+              "current": [
+                1,
+                3
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "neighbors": 0,
+                "frontierOwner": [
+                  1,
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS blocked",
+            "note": "1 intermediate event skipped. grid[0][3] is water; return",
+            "state": {
+              "current": [
+                0,
+                3
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "blocked": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfsreturn",
+            "label": "DFS return",
+            "note": "2 intermediate events skipped. Finished neighbors of (1,3); return to the caller",
+            "state": {
+              "current": [
+                1,
+                3
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "frontierOwner": [
+                  1,
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS blocked",
+            "note": "1 intermediate event skipped. grid[0][2] is water; return",
+            "state": {
+              "current": [
+                0,
+                2
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "blocked": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS blocked",
+            "note": "1 intermediate event skipped. grid[0][1] is water; return",
+            "state": {
+              "current": [
+                0,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "blocked": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS blocked",
+            "note": "1 intermediate event skipped. grid[0][0] is water; return",
+            "state": {
+              "current": [
+                0,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "blocked": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS blocked",
+            "note": "1 intermediate event skipped. grid[1][2] is water; return",
+            "state": {
+              "current": [
+                1,
+                2
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "blocked": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfsreturn",
+            "label": "DFS return",
+            "note": "1 intermediate event skipped. Finished neighbors of (1,1); return to the caller",
+            "state": {
+              "current": [
+                1,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  0,
+                  1
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "frontierOwner": [
+                  1,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfsreturn",
+            "label": "DFS return",
+            "note": "2 intermediate events skipped. Finished neighbors of (2,1); return to the caller",
+            "state": {
+              "current": [
+                2,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  1,
+                  1
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "frontierOwner": [
+                  2,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfscheck",
+            "label": "DFS blocked",
+            "note": "1 intermediate event skipped. grid[0][0] is water; return",
+            "state": {
+              "current": [
+                0,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "blocked": 1,
+                "frontierOwner": null
+              }
+            }
+          },
+          {
+            "step": "dfsreturn",
+            "label": "DFS return",
+            "note": "1 intermediate event skipped. Finished neighbors of (1,0); return to the caller",
+            "state": {
+              "current": [
+                1,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  2,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "frontierOwner": [
+                  1,
+                  0
+                ]
+              }
+            }
+          },
+          {
+            "step": "dfsreturn",
+            "label": "DFS return",
+            "note": "1 intermediate event skipped. Finished neighbors of (0,0); return to the caller",
+            "state": {
+              "current": [
+                0,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "frontier": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "path": [
+                [
+                  0,
+                  0
+                ]
+              ],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "frontierOwner": [
+                  0,
+                  0
+                ]
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (0,1)",
+            "note": "grid[0][1] = 0",
+            "state": {
+              "current": [
+                0,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (0,3)",
+            "note": "1 intermediate event skipped. grid[0][3] = 0",
+            "state": {
+              "current": [
+                0,
+                3
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (1,0)",
+            "note": "1 intermediate event skipped. grid[1][0] = 0",
+            "state": {
+              "current": [
+                1,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (1,3)",
+            "note": "2 intermediate events skipped. grid[1][3] = 0",
+            "state": {
+              "current": [
+                1,
+                3
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (2,0)",
+            "note": "1 intermediate event skipped. grid[2][0] = 0",
+            "state": {
+              "current": [
+                2,
+                0
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  4
+                ],
+                [
+                  2,
+                  0
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (2,2)",
+            "note": "1 intermediate event skipped. grid[2][2] = 0",
+            "state": {
+              "current": [
+                2,
+                2
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  4
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (2,4)",
+            "note": "1 intermediate event skipped. grid[2][4] = 0",
+            "state": {
+              "current": [
+                2,
+                4
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  4
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (3,1)",
+            "note": "1 intermediate event skipped. grid[3][1] = 0",
+            "state": {
+              "current": [
+                3,
+                1
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  4
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  0
+                ],
+                [
+                  3,
+                  1
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "scan",
+            "label": "Scan cell (3,4)",
+            "note": "2 intermediate events skipped. grid[3][4] = 0",
+            "state": {
+              "current": [
+                3,
+                4
+              ],
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  4
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  0
+                ],
+                [
+                  3,
+                  1
+                ],
+                [
+                  3,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1,
+                "cell": 0
+              }
+            }
+          },
+          {
+            "step": "return",
+            "label": "Return count",
+            "note": "All cells scanned; answer = 1",
+            "state": {
+              "current": null,
+              "cells": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "filled": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  1,
+                  3
+                ]
+              ],
+              "reads": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  3
+                ],
+                [
+                  0,
+                  4
+                ],
+                [
+                  1,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  3
+                ],
+                [
+                  1,
+                  4
+                ],
+                [
+                  2,
+                  0
+                ],
+                [
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ],
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  4
+                ],
+                [
+                  3,
+                  0
+                ],
+                [
+                  3,
+                  1
+                ],
+                [
+                  3,
+                  2
+                ],
+                [
+                  3,
+                  3
+                ],
+                [
+                  3,
+                  4
+                ]
+              ],
+              "frontier": [],
+              "path": [],
+              "answer": 1,
+              "vars": {
+                "islands": 1
+              }
+            }
+          }
+        ],
+        "result": 1,
+        "anchors": [
+          2,
+          4,
+          59
+        ],
+        "code": {
+          "java": [
+            {
+              "step": "structure",
+              "text": "class Solution {",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "def",
+              "text": "    private int rows;",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "def",
+              "text": "    private int cols;",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "def",
+              "text": "    public int numIslands(char[][] grid) {",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "init",
+              "text": "        if (grid == null || grid.length == 0) return 0;",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "init",
+              "text": "        rows = grid.length;",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "init",
+              "text": "        cols = grid[0].length;",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "init",
+              "text": "        int count = 0;",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "scan",
+              "text": "        for (int r = 0; r < rows; r++) {",
+              "explain": "Walks every cell in row order so disconnected land regions are all encountered regardless of position."
+            },
+            {
+              "step": "scan",
+              "text": "            for (int c = 0; c < cols; c++) {",
+              "explain": "Walks every cell in row order so disconnected land regions are all encountered regardless of position."
+            },
+            {
+              "step": "check",
+              "text": "                if (grid[r][c] == '1') {",
+              "explain": "Tests whether current cell holds unclaimed land so water and already sunk cells never start duplicate islands."
+            },
+            {
+              "step": "enter",
+              "text": "                    count++;",
+              "explain": "Credits a new island upon fresh land discovery so each connected component contributes exactly once."
+            },
+            {
+              "step": "dfs",
+              "text": "                    dfs(grid, r, c);",
+              "explain": "Starts sinking scope for current component so reachable land is removed before scan resumes."
+            },
+            {
+              "step": "structure",
+              "text": "                }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "            }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "        }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "return",
+              "text": "        return count;",
+              "explain": "Closes full scan scope and exposes island total so result reflects distinct components including none found."
+            },
+            {
+              "step": "structure",
+              "text": "    }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "def",
+              "text": "    private void dfs(char[][] grid, int r, int c) {",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "dfscheck",
+              "text": "        if (r < 0 || r >= rows || c < 0 || c >= cols || grid[r][c] != '1') return;",
+              "explain": "Validates bounds and land status before acting so edges and water safely stop recursion without side effects."
+            },
+            {
+              "step": "visit",
+              "text": "        grid[r][c] = '0';",
+              "explain": "Marks current land as water upon entry so revisits are impossible and components cannot merge or recount."
+            },
+            {
+              "step": "recurse",
+              "text": "        dfs(grid, r + 1, c);",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "recurse",
+              "text": "        dfs(grid, r - 1, c);",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "recurse",
+              "text": "        dfs(grid, r, c + 1);",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "recurse",
+              "text": "        dfs(grid, r, c - 1);",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "dfsreturn",
+              "text": "        return;",
+              "explain": "Returns control after neighbours finish so nested sinking unwinds cleanly without extra counting."
+            },
+            {
+              "step": "structure",
+              "text": "    }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "}",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            }
+          ],
+          "cpp": [
+            {
+              "step": "structure",
+              "text": "class Solution {",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "public:",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "def",
+              "text": "    int numIslands(vector<vector<char>>& grid) {",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "init",
+              "text": "        if (grid.empty() || grid[0].empty()) return 0;",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "init",
+              "text": "        int rows = (int)grid.size();",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "init",
+              "text": "        int cols = (int)grid[0].size();",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "init",
+              "text": "        int count = 0;",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "scan",
+              "text": "        for (int r = 0; r < rows; r++) {",
+              "explain": "Walks every cell in row order so disconnected land regions are all encountered regardless of position."
+            },
+            {
+              "step": "scan",
+              "text": "            for (int c = 0; c < cols; c++) {",
+              "explain": "Walks every cell in row order so disconnected land regions are all encountered regardless of position."
+            },
+            {
+              "step": "check",
+              "text": "                if (grid[r][c] == '1') {",
+              "explain": "Tests whether current cell holds unclaimed land so water and already sunk cells never start duplicate islands."
+            },
+            {
+              "step": "enter",
+              "text": "                    count++;",
+              "explain": "Credits a new island upon fresh land discovery so each connected component contributes exactly once."
+            },
+            {
+              "step": "dfs",
+              "text": "                    dfs(grid, r, c, rows, cols);",
+              "explain": "Starts sinking scope for current component so reachable land is removed before scan resumes."
+            },
+            {
+              "step": "structure",
+              "text": "                }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "            }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "        }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "return",
+              "text": "        return count;",
+              "explain": "Closes full scan scope and exposes island total so result reflects distinct components including none found."
+            },
+            {
+              "step": "structure",
+              "text": "    }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "def",
+              "text": "private:",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "def",
+              "text": "    void dfs(vector<vector<char>>& grid, int r, int c, int rows, int cols) {",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "dfscheck",
+              "text": "        if (r < 0 || r >= rows || c < 0 || c >= cols || grid[r][c] != '1') return;",
+              "explain": "Validates bounds and land status before acting so edges and water safely stop recursion without side effects."
+            },
+            {
+              "step": "visit",
+              "text": "        grid[r][c] = '0';",
+              "explain": "Marks current land as water upon entry so revisits are impossible and components cannot merge or recount."
+            },
+            {
+              "step": "recurse",
+              "text": "        dfs(grid, r + 1, c, rows, cols);",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "recurse",
+              "text": "        dfs(grid, r - 1, c, rows, cols);",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "recurse",
+              "text": "        dfs(grid, r, c + 1, rows, cols);",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "recurse",
+              "text": "        dfs(grid, r, c - 1, rows, cols);",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "dfsreturn",
+              "text": "        return;",
+              "explain": "Returns control after neighbours finish so nested sinking unwinds cleanly without extra counting."
+            },
+            {
+              "step": "structure",
+              "text": "    }",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            },
+            {
+              "step": "structure",
+              "text": "};",
+              "explain": "Structural wrapper: opens or closes a scope and performs no algorithm operation."
+            }
+          ],
+          "pseudo": [
+            {
+              "step": "def",
+              "text": "numIslands(grid):",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "init",
+              "text": "  rows = grid.length; cols = grid[0].length; count = 0",
+              "explain": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands."
+            },
+            {
+              "step": "scan",
+              "text": "  for r = 0 to rows - 1:",
+              "explain": "Walks every cell in row order so disconnected land regions are all encountered regardless of position."
+            },
+            {
+              "step": "scan",
+              "text": "    for c = 0 to cols - 1:",
+              "explain": "Walks every cell in row order so disconnected land regions are all encountered regardless of position."
+            },
+            {
+              "step": "check",
+              "text": "      if grid[r][c] == 1:",
+              "explain": "Tests whether current cell holds unclaimed land so water and already sunk cells never start duplicate islands."
+            },
+            {
+              "step": "enter",
+              "text": "        count += 1",
+              "explain": "Credits a new island upon fresh land discovery so each connected component contributes exactly once."
+            },
+            {
+              "step": "dfs",
+              "text": "        dfs(r, c)",
+              "explain": "Starts sinking scope for current component so reachable land is removed before scan resumes."
+            },
+            {
+              "step": "return",
+              "text": "  return count",
+              "explain": "Closes full scan scope and exposes island total so result reflects distinct components including none found."
+            },
+            {
+              "step": "def",
+              "text": "dfs(r, c):",
+              "explain": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds."
+            },
+            {
+              "step": "dfscheck",
+              "text": "  if r, c outside grid or grid[r][c] != 1: return",
+              "explain": "Validates bounds and land status before acting so edges and water safely stop recursion without side effects."
+            },
+            {
+              "step": "visit",
+              "text": "  grid[r][c] = 0",
+              "explain": "Marks current land as water upon entry so revisits are impossible and components cannot merge or recount."
+            },
+            {
+              "step": "recurse",
+              "text": "  dfs(r+1, c); dfs(r-1, c); dfs(r, c+1); dfs(r, c-1)",
+              "explain": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline."
+            },
+            {
+              "step": "dfsreturn",
+              "text": "  return",
+              "explain": "Returns control after neighbours finish so nested sinking unwinds cleanly without extra counting."
+            }
+          ]
+        },
+        "title": "Number of Islands",
+        "pattern": "graph-dfs",
+        "lesson": {
+          "idea": "Every unvisited land cell starts a new island; DFS sinks its whole 4-connected component before the scan continues.",
+          "trap": "Counting DFS calls or only walking from (0,0) misses disconnected islands and double-counts land.",
+          "time": "O(m*n)",
+          "space": "O(m*n)"
+        },
+        "omitted": 40,
+        "detail": {
+          "total": 80,
+          "sampleSize": 40,
+          "omitted": 40,
+          "chapters": [
+            {
+              "index": 0,
+              "title": "init · events 0–0",
+              "start": 0,
+              "end": 1,
+              "count": 1
+            },
+            {
+              "index": 1,
+              "title": "scan · events 1–1",
+              "start": 1,
+              "end": 2,
+              "count": 1
+            },
+            {
+              "index": 2,
+              "title": "enter · events 2–2",
+              "start": 2,
+              "end": 3,
+              "count": 1
+            },
+            {
+              "index": 3,
+              "title": "dfscheck · events 3–3",
+              "start": 3,
+              "end": 4,
+              "count": 1
+            },
+            {
+              "index": 4,
+              "title": "visit · events 4–4",
+              "start": 4,
+              "end": 5,
+              "count": 1
+            },
+            {
+              "index": 5,
+              "title": "recurse · events 5–5",
+              "start": 5,
+              "end": 6,
+              "count": 1
+            },
+            {
+              "index": 6,
+              "title": "dfscheck · events 6–6",
+              "start": 6,
+              "end": 7,
+              "count": 1
+            },
+            {
+              "index": 7,
+              "title": "visit · events 7–7",
+              "start": 7,
+              "end": 8,
+              "count": 1
+            },
+            {
+              "index": 8,
+              "title": "recurse · events 8–8",
+              "start": 8,
+              "end": 9,
+              "count": 1
+            },
+            {
+              "index": 9,
+              "title": "dfscheck · events 9–9",
+              "start": 9,
+              "end": 10,
+              "count": 1
+            },
+            {
+              "index": 10,
+              "title": "visit · events 10–10",
+              "start": 10,
+              "end": 11,
+              "count": 1
+            },
+            {
+              "index": 11,
+              "title": "recurse · events 11–11",
+              "start": 11,
+              "end": 12,
+              "count": 1
+            },
+            {
+              "index": 12,
+              "title": "dfscheck · events 12–14",
+              "start": 12,
+              "end": 15,
+              "count": 3
+            },
+            {
+              "index": 13,
+              "title": "visit · events 15–15",
+              "start": 15,
+              "end": 16,
+              "count": 1
+            },
+            {
+              "index": 14,
+              "title": "recurse · events 16–16",
+              "start": 16,
+              "end": 17,
+              "count": 1
+            },
+            {
+              "index": 15,
+              "title": "dfscheck · events 17–18",
+              "start": 17,
+              "end": 19,
+              "count": 2
+            },
+            {
+              "index": 16,
+              "title": "visit · events 19–19",
+              "start": 19,
+              "end": 20,
+              "count": 1
+            },
+            {
+              "index": 17,
+              "title": "recurse · events 20–20",
+              "start": 20,
+              "end": 21,
+              "count": 1
+            },
+            {
+              "index": 18,
+              "title": "dfscheck · events 21–22",
+              "start": 21,
+              "end": 23,
+              "count": 2
+            },
+            {
+              "index": 19,
+              "title": "visit · events 23–23",
+              "start": 23,
+              "end": 24,
+              "count": 1
+            },
+            {
+              "index": 20,
+              "title": "recurse · events 24–24",
+              "start": 24,
+              "end": 25,
+              "count": 1
+            },
+            {
+              "index": 21,
+              "title": "dfscheck · events 25–26",
+              "start": 25,
+              "end": 27,
+              "count": 2
+            },
+            {
+              "index": 22,
+              "title": "visit · events 27–27",
+              "start": 27,
+              "end": 28,
+              "count": 1
+            },
+            {
+              "index": 23,
+              "title": "recurse · events 28–28",
+              "start": 28,
+              "end": 29,
+              "count": 1
+            },
+            {
+              "index": 24,
+              "title": "dfscheck · events 29–30",
+              "start": 29,
+              "end": 31,
+              "count": 2
+            },
+            {
+              "index": 25,
+              "title": "visit · events 31–31",
+              "start": 31,
+              "end": 32,
+              "count": 1
+            },
+            {
+              "index": 26,
+              "title": "recurse · events 32–32",
+              "start": 32,
+              "end": 33,
+              "count": 1
+            },
+            {
+              "index": 27,
+              "title": "dfscheck · events 33–33",
+              "start": 33,
+              "end": 34,
+              "count": 1
+            },
+            {
+              "index": 28,
+              "title": "visit · events 34–34",
+              "start": 34,
+              "end": 35,
+              "count": 1
+            },
+            {
+              "index": 29,
+              "title": "recurse · events 35–35",
+              "start": 35,
+              "end": 36,
+              "count": 1
+            },
+            {
+              "index": 30,
+              "title": "dfscheck · events 36–39",
+              "start": 36,
+              "end": 40,
+              "count": 4
+            },
+            {
+              "index": 31,
+              "title": "dfsreturn · events 40–40",
+              "start": 40,
+              "end": 41,
+              "count": 1
+            },
+            {
+              "index": 32,
+              "title": "dfscheck · events 41–42",
+              "start": 41,
+              "end": 43,
+              "count": 2
+            },
+            {
+              "index": 33,
+              "title": "dfsreturn · events 43–43",
+              "start": 43,
+              "end": 44,
+              "count": 1
+            },
+            {
+              "index": 34,
+              "title": "dfscheck · events 44–44",
+              "start": 44,
+              "end": 45,
+              "count": 1
+            },
+            {
+              "index": 35,
+              "title": "dfsreturn · events 45–45",
+              "start": 45,
+              "end": 46,
+              "count": 1
+            },
+            {
+              "index": 36,
+              "title": "dfscheck · events 46–46",
+              "start": 46,
+              "end": 47,
+              "count": 1
+            },
+            {
+              "index": 37,
+              "title": "dfsreturn · events 47–47",
+              "start": 47,
+              "end": 48,
+              "count": 1
+            },
+            {
+              "index": 38,
+              "title": "dfscheck · events 48–49",
+              "start": 48,
+              "end": 50,
+              "count": 2
+            },
+            {
+              "index": 39,
+              "title": "dfsreturn · events 50–50",
+              "start": 50,
+              "end": 51,
+              "count": 1
+            },
+            {
+              "index": 40,
+              "title": "dfscheck · events 51–52",
+              "start": 51,
+              "end": 53,
+              "count": 2
+            },
+            {
+              "index": 41,
+              "title": "dfsreturn · events 53–54",
+              "start": 53,
+              "end": 55,
+              "count": 2
+            },
+            {
+              "index": 42,
+              "title": "dfscheck · events 55–56",
+              "start": 55,
+              "end": 57,
+              "count": 2
+            },
+            {
+              "index": 43,
+              "title": "dfsreturn · events 57–57",
+              "start": 57,
+              "end": 58,
+              "count": 1
+            },
+            {
+              "index": 44,
+              "title": "dfscheck · events 58–58",
+              "start": 58,
+              "end": 59,
+              "count": 1
+            },
+            {
+              "index": 45,
+              "title": "dfsreturn · events 59–59",
+              "start": 59,
+              "end": 60,
+              "count": 1
+            },
+            {
+              "index": 46,
+              "title": "scan · events 60–78",
+              "start": 60,
+              "end": 79,
+              "count": 19
+            },
+            {
+              "index": 47,
+              "title": "return · events 79–79",
+              "start": 79,
+              "end": 80,
+              "count": 1
+            }
+          ]
+        },
+        "explain": {
+          "check": "Tests whether current cell holds unclaimed land so water and already sunk cells never start duplicate islands.",
+          "def": "Declares solution and helper scope so scanning logic and sinking logic stay separated yet share grid bounds.",
+          "dfs": "Starts sinking scope for current component so reachable land is removed before scan resumes.",
+          "dfscheck": "Validates bounds and land status before acting so edges and water safely stop recursion without side effects.",
+          "dfsreturn": "Returns control after neighbours finish so nested sinking unwinds cleanly without extra counting.",
+          "enter": "Credits a new island upon fresh land discovery so each connected component contributes exactly once.",
+          "init": "Captures grid dimensions with zeroed count so water only grids naturally yield no islands.",
+          "recurse": "Expands sinking to orthogonal neighbours so whole connected shape collapses regardless of outline.",
+          "return": "Closes full scan scope and exposes island total so result reflects distinct components including none found.",
+          "scan": "Walks every cell in row order so disconnected land regions are all encountered regardless of position.",
+          "visit": "Marks current land as water upon entry so revisits are impossible and components cannot merge or recount."
+        },
+        "languages": [
+          "java",
+          "cpp",
+          "pseudo"
+        ],
+        "source": "problem-adapter"
+      },
+      "practice": [
+        {
+          "id": "v1",
+          "seedLabel": "fresh grids",
+          "intent": "Same pattern, different numbers so you reproduce the reasoning.",
+          "difficulty": "Medium",
+          "title": "Number of Islands — fresh grids (island-count drill)",
+          "statement": "You are given a rectangular binary grid where 1 marks land and 0 marks water. An island is a group of 1s connected horizontally or vertically, and the grid edges are surrounded by water. Count how many islands the grid holds. Test grids are small, at most 5 rows by 6 columns.",
+          "signature": {
+            "name": "numIslands",
+            "params": [
+              {
+                "name": "grid",
+                "type": "char[][]"
+              }
+            ],
+            "return": "int"
+          },
+          "examples": [
+            {
+              "input": "grid = [[1,0,0],[1,1,1],[1,1,0],[1,1,0],[0,1,0]]",
+              "output": "1",
+              "explain": ""
+            }
+          ],
+          "tests": [
+            {
+              "args": [
+                "[[1,0,0],[1,1,1],[1,1,0],[1,1,0],[0,1,0]]"
+              ],
+              "expected": "1"
+            },
+            {
+              "args": [
+                "[[1,1,0,1],[1,0,0,1],[0,0,1,0]]"
+              ],
+              "expected": "3"
+            },
+            {
+              "args": [
+                "[[0,0,1],[1,0,0],[1,1,0],[0,1,1]]"
+              ],
+              "expected": "2"
+            },
+            {
+              "args": [
+                "[[0,0,1,0,0,1],[0,1,1,0,1,1],[1,1,1,0,1,1]]"
+              ],
+              "expected": "2"
+            }
+          ],
+          "mode": "exact",
+          "hints": [
+            "Walk every cell once and flood-fill each unvisited land cell you meet.",
+            "Mark visited land as you flood so each island is counted exactly once."
+          ]
+        },
+        {
+          "id": "v2",
+          "seedLabel": "edge cases",
+          "intent": "Same pattern with the edge case the original hides.",
+          "difficulty": "Medium",
+          "title": "Number of Islands — edge cases (island-count drill)",
+          "statement": "Same island count with the boundary grids. The grid may be a single cell, all land, or all water. A 1x1 grid holding 1 is one island, a 1x1 grid holding 0 is none, and a solid 2x2 block of land is a single island.",
+          "signature": {
+            "name": "numIslands",
+            "params": [
+              {
+                "name": "grid",
+                "type": "char[][]"
+              }
+            ],
+            "return": "int"
+          },
+          "examples": [
+            {
+              "input": "grid = [[1]]",
+              "output": "1",
+              "explain": ""
+            }
+          ],
+          "tests": [
+            {
+              "args": [
+                "[[1]]"
+              ],
+              "expected": "1"
+            },
+            {
+              "args": [
+                "[[0]]"
+              ],
+              "expected": "0"
+            },
+            {
+              "args": [
+                "[[1,1],[1,1]]"
+              ],
+              "expected": "1"
+            },
+            {
+              "args": [
+                "[[0,0],[0,0]]"
+              ],
+              "expected": "0"
+            }
+          ],
+          "mode": "exact",
+          "hints": [
+            "A single cell is the smallest grid the task allows.",
+            "All-land and all-water grids test whether both extremes behave."
+          ]
+        },
+        {
+          "id": "v3",
+          "seedLabel": "twist, same signature",
+          "intent": "Same signature, different question: the twist tests whether the idea transfers.",
+          "difficulty": "Medium",
+          "title": "Number of Islands — twist: water regions (island-count drill)",
+          "statement": "Twist: count regions of water instead of land. A water region is a group of 0s connected horizontally or vertically, and the ocean touching the grid edges counts like any other region. Return how many such regions the grid holds.",
+          "signature": {
+            "name": "numIslands",
+            "params": [
+              {
+                "name": "grid",
+                "type": "char[][]"
+              }
+            ],
+            "return": "int"
+          },
+          "examples": [
+            {
+              "input": "grid = [[1,1,1,0,1],[0,1,1,1,1],[1,1,0,0,0],[0,0,1,1,1],[0,1,1,0,1]]",
+              "output": "5",
+              "explain": ""
+            }
+          ],
+          "tests": [
+            {
+              "args": [
+                "[[1,1,1,0,1],[0,1,1,1,1],[1,1,0,0,0],[0,0,1,1,1],[0,1,1,0,1]]"
+              ],
+              "expected": "5"
+            },
+            {
+              "args": [
+                "[[0,1],[1,0]]"
+              ],
+              "expected": "2"
+            },
+            {
+              "args": [
+                "[[0,1],[1,0],[1,0],[0,0],[0,1]]"
+              ],
+              "expected": "2"
+            },
+            {
+              "args": [
+                "[[1,1],[0,1],[1,0]]"
+              ],
+              "expected": "2"
+            }
+          ],
+          "mode": "exact",
+          "hints": [
+            "Run the same flood-fill idea with the roles swapped: spread through 0s.",
+            "Corner-touching water still connects only through shared edges, not diagonals."
+          ]
+        }
+      ]
+    }
+  ]
+}

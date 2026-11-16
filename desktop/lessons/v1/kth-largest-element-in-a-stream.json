@@ -1,0 +1,124 @@
+{
+ "slug": "kth-largest-element-in-a-stream",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "KthLargest",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [
+     {
+      "type": "int",
+      "value": "3"
+     },
+     {
+      "type": "int[]",
+      "value": "[4,5,8,2]"
+     }
+    ],
+    "calls": [
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int",
+        "value": "3"
+       }
+      ],
+      "returns": "int"
+     },
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int",
+        "value": "5"
+       }
+      ],
+      "returns": "int"
+     },
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int",
+        "value": "10"
+       }
+      ],
+      "returns": "int"
+     },
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int",
+        "value": "9"
+       }
+      ],
+      "returns": "int"
+     },
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int",
+        "value": "4"
+       }
+      ],
+      "returns": "int"
+     }
+    ],
+    "expected": [
+     "4",
+     "5",
+     "5",
+     "8",
+     "8"
+    ],
+    "example": 1
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "3",
+     "[4,5,8,2]",
+     "[3,5,10,9,4]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ],
+  "signature": {
+   "name": "kthLargestAdd",
+   "params": [
+    {
+     "name": "k",
+     "type": "int"
+    },
+    {
+     "name": "nums",
+     "type": "int[]"
+    },
+    {
+     "name": "adds",
+     "type": "int[]"
+    }
+   ],
+   "return": "int[]"
+  }
+ }
+}

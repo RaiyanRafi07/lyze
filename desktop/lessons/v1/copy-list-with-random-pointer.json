@@ -1,0 +1,57 @@
+{
+ "slug": "copy-list-with-random-pointer",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "copyRandomList",
+   "params": [
+    {
+     "name": "head",
+     "type": "Node"
+    }
+   ],
+   "return": "Node"
+  },
+  "tests": [
+   {
+    "args": [
+     "[[7,null],[13,0],[11,4],[10,2],[1,0]]"
+    ],
+    "expected": "[[7,null],[13,0],[11,4],[10,2],[1,0]]",
+    "example": 1
+   }
+  ],
+  "helpers": {
+   "java": "class __Custom { static Node __mkCustomNode(int[][] pairs) { if (pairs.length == 0) return null; Node[] nodes = new Node[pairs.length]; for (int i = 0; i < pairs.length; i++) nodes[i] = new Node(pairs[i][0]); for (int i = 0; i < pairs.length; i++) { if (i + 1 < pairs.length) nodes[i].next = nodes[i + 1]; if (pairs[i][1] >= 0) nodes[i].random = nodes[pairs[i][1]]; } return nodes[0]; } static String __outCustomNode(Object v) { Node head = (Node) v; java.util.IdentityHashMap<Node, Integer> ids = new java.util.IdentityHashMap<>(); Node n = head; int i = 0; while (n != null) { ids.put(n, i++); n = n.next; } StringBuilder sb = new StringBuilder(\"[\"); n = head; boolean first = true; while (n != null) { if (!first) sb.append(\",\"); first = false; sb.append(\"[\").append(n.val).append(\",\"); sb.append(n.random == null ? \"null\" : ids.get(n.random)).append(\"]\"); n = n.next; } return sb.append(\"]\").toString(); } }",
+   "cpp": "static Node* __mkCustomNode(std::vector<std::vector<int>> v) { if (v.empty()) return nullptr; std::vector<Node*> nodes; for (auto& p : v) nodes.push_back(new Node(p[0])); for (size_t i = 0; i < v.size(); i++) { if (i + 1 < v.size()) nodes[i]->next = nodes[i + 1]; if (v[i][1] >= 0) nodes[i]->random = nodes[(size_t)v[i][1]]; } return nodes[0]; } static std::string __customNodeOut(Node* head) { std::vector<Node*> order; std::map<Node*, int> ids; for (Node* n = head; n; n = n->next) { ids[n] = (int)order.size(); order.push_back(n); } std::string out = \"[\"; for (size_t i = 0; i < order.size(); i++) { if (i) out += \",\"; out += \"[\" + std::to_string(order[i]->val) + \",\"; out += order[i]->random ? std::to_string(ids[order[i]->random]) : \"null\"; out += \"]\"; } return out + \"]\"; }"
+  }
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[[7,null],[13,0],[11,4],[10,2],[1,0]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ],
+  "signature": {
+   "name": "copyRandomList",
+   "params": [
+    {
+     "name": "pairs",
+     "type": "string"
+    }
+   ],
+   "return": "string"
+  }
+ }
+}

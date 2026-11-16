@@ -1,0 +1,63 @@
+{
+ "slug": "surrounded-regions",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "solve",
+   "params": [
+    {
+     "name": "board",
+     "type": "char[][]"
+    }
+   ],
+   "return": "void"
+  },
+  "tests": [
+   {
+    "args": [
+     "[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"X\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]"
+    ],
+    "expected": "[[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]]",
+    "example": 1
+   },
+   {
+    "args": [
+     "[[\"X\"]]"
+    ],
+    "expected": "[[[\"X\"]]]",
+    "example": 2
+   }
+  ],
+  "mutates": [
+   0
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[[\"X\",\"X\",\"X\",\"X\"],[\"X\",\"O\",\"O\",\"X\"],[\"X\",\"X\",\"O\",\"X\"],[\"X\",\"O\",\"X\",\"X\"]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ],
+  "signature": {
+   "name": "solve",
+   "params": [
+    {
+     "name": "board",
+     "type": "char[][]"
+    }
+   ],
+   "return": "char[][]"
+  }
+ }
+}

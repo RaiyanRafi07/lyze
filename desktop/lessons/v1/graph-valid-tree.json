@@ -1,0 +1,103 @@
+{
+ "id": 261,
+ "slug": "graph-valid-tree",
+ "title": "Graph Valid Tree",
+ "difficulty": "Medium",
+ "topics": [
+  "Graph",
+  "Depth-First Search",
+  "Breadth-First Search",
+  "Union Find"
+ ],
+ "pattern": "graph-dfs",
+ "patterns": [
+  "graph-dfs",
+  "union-find",
+  "topological-sort"
+ ],
+ "premium": false,
+ "description": "Determine whether an undirected graph is a tree: every vertex must be connected and the graph must contain no cycle. Vertices are numbered zero through n minus one; self-loops and repeated edges are excluded.",
+ "examples": [
+  {
+   "n": 1,
+   "input": "n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]",
+   "output": "true",
+   "explain": "One connected component and four edges for five vertices.",
+   "raw": "Input: n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]\nOutput: true\nExplanation: One connected component and four edges for five vertices."
+  },
+  {
+   "n": 2,
+   "input": "n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]",
+   "output": "false",
+   "explain": "The extra edge creates a cycle.",
+   "raw": "Input: n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]\nOutput: false\nExplanation: The extra edge creates a cycle."
+  }
+ ],
+ "constraints": [
+  "1 <= n <= 2000",
+  "0 <= edges.length <= 5000",
+  "endpoints satisfy 0 <= endpoint < n",
+  "no self-loops or repeated edges"
+ ],
+ "follow_ups": [],
+ "hints": [
+  "A tree on n vertices has exactly n-1 edges; any other count is an instant no.",
+  "With n-1 edges, one connected component is enough.",
+  "Union-find detects a cycle the moment an edge joins two vertices already connected."
+ ],
+ "snippets": {
+  "java": "class Solution {\n    public boolean validTree(int n, int[][] edges) {\n        return false;\n    }\n}\n",
+  "cpp": "class Solution {\npublic:\n    bool validTree(int n, vector<vector<int>>& edges) {\n        return false;\n    }\n};\n"
+ },
+ "solution": "Reject any edge count other than n-1, then union the edges: a repeated union signals a cycle and leftover sets signal disconnection.",
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "validTree",
+   "params": [
+    {
+     "name": "n",
+     "type": "int"
+    },
+    {
+     "name": "edges",
+     "type": "int[][]"
+    }
+   ],
+   "return": "boolean"
+  },
+  "tests": [
+   {
+    "args": [
+     "5",
+     "[[0,1],[0,2],[0,3],[1,4]]"
+    ],
+    "expected": "true",
+    "example": 1
+   },
+   {
+    "args": [
+     "5",
+     "[[0,1],[1,2],[2,3],[1,3],[1,4]]"
+    ],
+    "expected": "false",
+    "example": 2
+   },
+   {
+    "args": [
+     "1",
+     "[]"
+    ],
+    "expected": "true",
+    "example": 3
+   }
+  ]
+ },
+ "provenance": {
+  "kind": "independent-equivalent",
+  "sources": [
+   "https://neetcode.io/problems/valid-tree/question"
+  ],
+  "note": "Statement authored from the brief for the native port; not copied. Generated tests are labeled."
+ }
+}

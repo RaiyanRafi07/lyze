@@ -88,7 +88,7 @@ function cppParamNames(source, name) {
 function topLevelLocals(body, typePattern) {
   const out = []
   const seen = new Set()
-  const pattern = new RegExp('(?:^|[;{}])\\s*(?:final\\s+)?(?:[A-Za-z_$][\\w$]*\\.)*(' + typePattern + ')(?:<[^;{}]*>)?(?:\\[\\])?\\s+([A-Za-z_$][\\w$]*)\\s*(?=[=;,)])', 'g')
+  const pattern = new RegExp('(?:^|[;{}])\\s*(?:final\\s+)?(?:[A-Za-z_$][\\w$]*\\.)*(' + typePattern + ')(?:<[^;{}]*>)?(?:\\[\\])*\\s+([A-Za-z_$][\\w$]*)\\s*(?=[=;,)])', 'g')
   // Depth *before* each char: method top level is 0, a loop body is 1. Only depth-0
   // locals are in scope for the whole rest of the method (loop-inner names would not
   // compile in an injected probe placed at the top of the loop body).
@@ -102,14 +102,41 @@ function topLevelLocals(body, typePattern) {
   }
   let match
   while ((match = pattern.exec(body)) !== null) {
-    const name = match[2]
-    if (seen.has(name)) continue
     // Depth at the type keyword itself (past any leading `;`/`{` the pattern consumed).
     const atType = match.index + Math.max(0, match[0].indexOf(match[1]))
-    if ((before[Math.min(atType, before.length - 1)] || 0) === 0) {
+    if ((before[Math.min(atType, before.length - 1)] || 0) !== 0) continue
+    // Collect the full declaration statement so multi-declarator lists
+    // (`int lo = 0, hi = 0;`) yield every name, not just the first.
+    let end = match.index + match[0].length
+    let depth = 0
+    let quote = null
+    for (let i = end; i < body.length; i += 1) {
+      const ch = body[i]
+      if (quote) {
+        if (ch === '\\') i += 1
+        else if (ch === quote) quote = null
+        continue
+      }
+      // Note: < > are NOT depth chars (a<b comparisons would unbalance the scan;
+      // generic brackets never contain an unquoted semicolon, so ()[]{} suffice).
+      if (ch === '"' || ch === "'") { quote = ch; continue }
+      if (ch === '(' || ch === '[' || ch === '{') depth += 1
+      else if (ch === ')' || ch === ']' || ch === '}') depth -= 1
+      if ((ch === ';' || ch === '{' || ch === '}') && depth <= 0) { end = i; break }
+    }
+    const names = []
+    for (const part of splitTopLevel(body.slice(match.index, end).replace(/;$/, ''))) {
+      if (!part || /^[<>{}\[\]()]*$/.test(part)) continue
+      const id = identOf(part.replace(/^(?:final\s+|const\s+)*/, ''))
+      // Skip the type fragment itself (e.g. a bare `int[]` with no declarator).
+      if (id && !seen.has(id) && !/^(int|long|double|float|boolean|char|String|void|var|final|const)$/.test(id)) names.push(id)
+    }
+    for (const name of names) {
+      if (seen.has(name)) continue
       seen.add(name)
       out.push({ name, pos: match.index })
     }
+    pattern.lastIndex = Math.max(pattern.lastIndex, end)
   }
   return out
 }
@@ -132,6 +159,7 @@ function methodBody(source, name) {
 /** Loop injection sites: [{index (into body), loopVar}] — capped, innermost-first safe. */
 function loopSites(body) {
   const sites = []
+  let sawUnbraced = false
   const pattern = /\b(for|while)\s*\(/g
   let match
   while ((match = pattern.exec(body)) !== null) {
@@ -147,7 +175,7 @@ function loopSites(body) {
       header += body[i]
     }
     const rest = body.slice(i + 1).match(/^\s*\{/)
-    if (!rest) continue
+    if (!rest) { sawUnbraced = true; continue }
     const braceIndex = i + 1 + rest[0].length
     let loopVar = ''
     if (match[1] === 'for') {
@@ -162,6 +190,7 @@ function loopSites(body) {
     sites.push({ index: braceIndex, loopVar })
     if (sites.length >= 12) break
   }
+  sites.sawUnbraced = sawUnbraced
   return sites
 }
 
@@ -196,6 +225,12 @@ class __LCTrace {
         long[] a = (long[]) v;
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < Math.min(a.length, 40); i++) { if (i > 0) sb.append(","); sb.append(a[i]); }
+        return sb.append("]").toString();
+      }
+      if (v instanceof Object[]) {
+        Object[] a = (Object[]) v;
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < Math.min(a.length, 40); i++) { if (i > 0) sb.append(","); sb.append(ser(a[i])); }
         return sb.append("]").toString();
       }
       if (v instanceof java.util.Map) {
@@ -246,6 +281,15 @@ function javaLiteralForTrace(raw, type) {
       return "'" + String(value ?? ' ').replace(/\\/g, '\\\\').replace(/'/g, "\\'").slice(0, 1) + "'"
     case 'int[]':
       return 'new int[]{' + (Array.isArray(value) ? value : []).map((item) => String(number(item))).join(', ') + '}'
+    case 'int[][]': {
+      const rows = Array.isArray(value) ? value : []
+      return 'new int[][]{' + rows.map((row) => '{' + (Array.isArray(row) ? row : []).map((item) => String(number(item))).join(', ') + '}').join(', ') + '}'
+    }
+    case 'char[][]': {
+      const rows = Array.isArray(value) ? value : []
+      const ch = (c) => "'" + String(c ?? ' ').replace(/\\/g, '\\\\').replace(/'/g, "\\'").slice(0, 1) + "'"
+      return 'new char[][]{' + rows.map((row) => '{' + (Array.isArray(row) ? row : []).map(ch).join(', ') + '}').join(', ') + '}'
+    }
     case 'string[]':
       return 'new String[]{' + (Array.isArray(value) ? value : []).map((item) => JSON.stringify(String(item ?? ''))).join(', ') + '}'
     default:
@@ -264,19 +308,27 @@ export async function traceJava(problem, code) {
   }
   const locals = topLevelLocals(found.body, 'int|long|double|boolean|char|String|int\\[\\]|long\\[\\]|Map|HashMap|Set|HashSet|List|ArrayList|Deque|ArrayDeque')
   const sites = loopSites(found.body)
-  if (sites.length === 0) return { ok: false, unavailable: true, error: 'trace: no loops found — there is nothing to step through' }
+  if (sites.length === 0) {
+    if (sites.sawUnbraced) return { ok: false, unavailable: true, error: 'trace: only for/while loops with braced bodies { } can be stepped through — wrap the loop body in braces and retry' }
+    return { ok: false, unavailable: true, error: 'trace: no loops found — there is nothing to step through' }
+  }
 
   const names = [...params]
   for (const local of locals) if (!names.includes(local.name)) names.push(local.name)
-  const callFor = (loopVar) => {
-    const all = loopVar && !names.includes(loopVar) ? [...names, loopVar] : names
+  const callFor = (loopVar, siteIndex) => {
+    // Only names declared strictly before the injection site are in scope here;
+    // injecting a later local (e.g. a result array allocated after the loops)
+    // would not compile. Params are always in scope.
+    const paramSet = new Set(params)
+    const scoped = names.filter((n) => paramSet.has(n) || locals.some((l) => l.name === n && l.pos < siteIndex))
+    const all = loopVar && !scoped.includes(loopVar) ? [...scoped, loopVar] : scoped
     return '\n__LCTrace.event(new String[]{' + all.map((n) => '"' + n + '"').join(',') + '}, new Object[]{' + all.join(',') + '});'
   }
   // Inject from the last site backwards so earlier indices stay valid.
   let instrumented = found.body
   const ordered = sites.slice().sort((a, b) => b.index - a.index)
   for (const site of ordered) {
-    instrumented = instrumented.slice(0, site.index) + callFor(site.loopVar) + instrumented.slice(site.index)
+    instrumented = instrumented.slice(0, site.index) + callFor(site.loopVar, site.index) + instrumented.slice(site.index)
   }
   const patched = code.slice(0, found.start) + instrumented + code.slice(found.start + found.body.length)
 
@@ -352,6 +404,16 @@ static std::string __lcser(const char* name, const std::vector<int>& v) {
   for (size_t i = 0; i < v.size() && i < 40; i++) { if (i) s += ","; s += std::to_string(v[i]); }
   return s + "]";
 }
+static std::string __lcser(const char* name, const std::vector<std::vector<int>>& v) {
+  std::string s = std::string("\\"") + name + "\\":[";
+  for (size_t i = 0; i < v.size() && i < 12; i++) {
+    if (i) s += ",";
+    s += "[";
+    for (size_t k = 0; k < v[i].size() && k < 40; k++) { if (k) s += ","; s += std::to_string(v[i][k]); }
+    s += "]";
+  }
+  return s + "]";
+}
 static std::string __lcser(const char* name, const std::unordered_map<int,int>& v) {
   std::string s = std::string("\\"") + name + "\\":{";
   size_t n = 0;
@@ -415,7 +477,7 @@ export async function traceCpp(problem, code) {
       const atType = m.index + Math.max(0, m[0].indexOf(m[1]))
       if ((before[Math.min(atType, before.length - 1)] || 0) === 0) {
         seen.add(m[2])
-        locals.push(m[2])
+        locals.push({ name: m[2], pos: m.index })
       }
     }
   }
@@ -453,14 +515,18 @@ export async function traceCpp(problem, code) {
     }
   }
   if (sites.length === 0) return { ok: false, unavailable: true, error: 'trace: no braced loops found — there is nothing to step through' }
-  const base = [...params, ...locals]
-  const callFor = (loopVar) => {
-    const all = loopVar && !base.includes(loopVar) ? [...base, loopVar] : base
+  const base = [...params, ...locals.map((l) => l.name)]
+  const callFor = (loopVar, siteIndex) => {
+    // Same scoping rule as the Java bridge: only params plus locals declared
+    // before the injection site may be named in the probe call.
+    const paramSet = new Set(params)
+    const scoped = base.filter((n) => paramSet.has(n) || locals.some((l) => l.name === n && l.pos < siteIndex))
+    const all = loopVar && !scoped.includes(loopVar) ? [...scoped, loopVar] : scoped
     return '\n__lctrace_emit({' + all.map((n) => '__lcser("' + n + '",' + n + ')').join(',') + '});'
   }
   let instrumented = body
   for (const site of sites.slice().sort((a, b) => b.index - a.index)) {
-    instrumented = instrumented.slice(0, site.index) + callFor(site.loopVar) + instrumented.slice(site.index)
+    instrumented = instrumented.slice(0, site.index) + callFor(site.loopVar, site.index) + instrumented.slice(site.index)
   }
   const patched = code.slice(0, start + 1) + instrumented + code.slice(start + 1 + body.length)
 

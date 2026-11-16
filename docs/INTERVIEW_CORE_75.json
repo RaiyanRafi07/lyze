@@ -1,0 +1,168 @@
+{
+  "id": "interview-core-75",
+  "title": "Interview Core 75",
+  "version": 1,
+  "selection": "Custom coverage-first interview curriculum; not the official LeetCode75 list or a company-frequency ranking.",
+  "groups": [
+    {
+      "title": "Arrays and hashing",
+      "slugs": [
+        "two-sum",
+        "contains-duplicate",
+        "valid-anagram",
+        "group-anagrams",
+        "top-k-frequent-elements",
+        "product-of-array-except-self",
+        "best-time-to-buy-and-sell-stock",
+        "maximum-subarray"
+      ]
+    },
+    {
+      "title": "Two pointers",
+      "slugs": [
+        "valid-palindrome",
+        "two-sum-ii-input-array-is-sorted",
+        "3sum",
+        "container-with-most-water",
+        "trapping-rain-water"
+      ]
+    },
+    {
+      "title": "Sliding windows",
+      "slugs": [
+        "longest-substring-without-repeating-characters",
+        "longest-repeating-character-replacement",
+        "minimum-window-substring",
+        "sliding-window-maximum"
+      ]
+    },
+    {
+      "title": "Stacks",
+      "slugs": [
+        "valid-parentheses",
+        "daily-temperatures",
+        "evaluate-reverse-polish-notation",
+        "decode-string"
+      ]
+    },
+    {
+      "title": "Binary search",
+      "slugs": [
+        "binary-search",
+        "search-in-rotated-sorted-array",
+        "find-minimum-in-rotated-sorted-array",
+        "koko-eating-bananas"
+      ]
+    },
+    {
+      "title": "Linked lists",
+      "slugs": [
+        "reverse-linked-list",
+        "merge-two-sorted-lists",
+        "remove-nth-node-from-end-of-list",
+        "reorder-list",
+        "linked-list-cycle"
+      ]
+    },
+    {
+      "title": "Trees",
+      "slugs": [
+        "invert-binary-tree",
+        "maximum-depth-of-binary-tree",
+        "diameter-of-binary-tree",
+        "balanced-binary-tree",
+        "same-tree",
+        "binary-tree-level-order-traversal",
+        "validate-binary-search-tree",
+        "kth-smallest-element-in-a-bst"
+      ]
+    },
+    {
+      "title": "Heaps",
+      "slugs": [
+        "kth-largest-element-in-an-array",
+        "merge-k-sorted-lists",
+        "find-median-from-data-stream"
+      ]
+    },
+    {
+      "title": "Graphs",
+      "slugs": [
+        "number-of-islands",
+        "clone-graph",
+        "course-schedule",
+        "course-schedule-ii",
+        "redundant-connection",
+        "pacific-atlantic-water-flow",
+        "rotting-oranges"
+      ]
+    },
+    {
+      "title": "Dynamic programming",
+      "slugs": [
+        "climbing-stairs",
+        "house-robber",
+        "coin-change",
+        "longest-increasing-subsequence",
+        "word-break",
+        "partition-equal-subset-sum",
+        "longest-common-subsequence",
+        "edit-distance"
+      ]
+    },
+    {
+      "title": "Backtracking",
+      "slugs": [
+        "subsets",
+        "permutations",
+        "combination-sum",
+        "word-search"
+      ]
+    },
+    {
+      "title": "Intervals",
+      "slugs": [
+        "merge-intervals",
+        "insert-interval",
+        "non-overlapping-intervals"
+      ]
+    },
+    {
+      "title": "Bits and arithmetic",
+      "slugs": [
+        "single-number",
+        "counting-bits",
+        "missing-number"
+      ]
+    },
+    {
+      "title": "Tries",
+      "slugs": [
+        "implement-trie-prefix-tree",
+        "design-add-and-search-words-data-structure"
+      ]
+    },
+    {
+      "title": "Stateful design",
+      "slugs": [
+        "lru-cache",
+        "min-stack"
+      ]
+    },
+    {
+      "title": "Matrices",
+      "slugs": [
+        "spiral-matrix",
+        "set-matrix-zeroes",
+        "rotate-image"
+      ]
+    },
+    {
+      "title": "Greedy",
+      "slugs": [
+        "jump-game",
+        "gas-station"
+      ]
+    }
+  ]
+}

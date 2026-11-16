@@ -1,0 +1,72 @@
+{
+ "slug": "linked-list-cycle",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "hasCycle",
+   "params": [
+    {
+     "name": "head",
+     "type": "ListNode"
+    }
+   ],
+   "return": "boolean"
+  },
+  "tests": [
+   {
+    "args": [
+     "{\"list\": [3,2,0,-4], \"pos\": 1}"
+    ],
+    "expected": "true",
+    "example": 1
+   },
+   {
+    "args": [
+     "{\"list\": [1,2], \"pos\": 0}"
+    ],
+    "expected": "true",
+    "example": 2
+   },
+   {
+    "args": [
+     "{\"list\": [1], \"pos\": -1}"
+    ],
+    "expected": "false",
+    "example": 3
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[3,2,0,-4]",
+     "1"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ],
+  "signature": {
+   "name": "hasCycle",
+   "params": [
+    {
+     "name": "head",
+     "type": "ListNode"
+    },
+    {
+     "name": "pos",
+     "type": "int"
+    }
+   ],
+   "return": "boolean"
+  }
+ }
+}

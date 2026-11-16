@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=LeetCode Lab
+Comment=Offline-first LeetCode Lab desktop (NeetCode 150)
+Exec=/opt/leetlab-lab/bin/leetlab-app /opt/leetlab-lab/share/leetlab
+Icon=/opt/leetlab-lab/share/leetlab/icon.png
+Categories=Education;Development;
+StartupNotify=true
+Terminal=false

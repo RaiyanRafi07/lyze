@@ -1,0 +1,12 @@
+[package]
+name = "leetlab-app"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+iced = { version = "=0.13.1", default-features = false, features = ["tiny-skia", "highlighter", "tokio"] }
+leetlab-core = { path = "../core" }
+leetlab-learning = { path = "../learning" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

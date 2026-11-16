@@ -1,0 +1,114 @@
+{
+ "slug": "detect-squares",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "DetectSquares",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int[]",
+        "value": "[3,10]"
+       }
+      ]
+     },
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int[]",
+        "value": "[11,2]"
+       }
+      ]
+     },
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int[]",
+        "value": "[3,2]"
+       }
+      ]
+     },
+     {
+      "method": "count",
+      "args": [
+       {
+        "type": "int[]",
+        "value": "[11,10]"
+       }
+      ],
+      "returns": "int"
+     },
+     {
+      "method": "count",
+      "args": [
+       {
+        "type": "int[]",
+        "value": "[14,8]"
+       }
+      ],
+      "returns": "int"
+     },
+     {
+      "method": "add",
+      "args": [
+       {
+        "type": "int[]",
+        "value": "[11,2]"
+       }
+      ]
+     },
+     {
+      "method": "count",
+      "args": [
+       {
+        "type": "int[]",
+        "value": "[11,10]"
+       }
+      ],
+      "returns": "int"
+     }
+    ],
+    "expected": [
+     "null",
+     "null",
+     "null",
+     "1",
+     "0",
+     "null",
+     "2"
+    ],
+    "example": 1
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[\"DetectSquares\",\"add\",\"add\",\"add\",\"count\",\"count\",\"add\",\"count\"]",
+     "[[],[3,10],[11,2],[3,2],[11,10],[14,8],[11,2],[11,10]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

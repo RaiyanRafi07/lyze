@@ -1,0 +1,94 @@
+{
+ "slug": "min-stack",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "MinStack",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "push",
+      "args": [
+       {
+        "type": "int",
+        "value": "-2"
+       }
+      ]
+     },
+     {
+      "method": "push",
+      "args": [
+       {
+        "type": "int",
+        "value": "0"
+       }
+      ]
+     },
+     {
+      "method": "push",
+      "args": [
+       {
+        "type": "int",
+        "value": "-3"
+       }
+      ]
+     },
+     {
+      "method": "getMin",
+      "args": [],
+      "returns": "int"
+     },
+     {
+      "method": "pop",
+      "args": []
+     },
+     {
+      "method": "top",
+      "args": [],
+      "returns": "int"
+     },
+     {
+      "method": "getMin",
+      "args": [],
+      "returns": "int"
+     }
+    ],
+    "expected": [
+     "null",
+     "null",
+     "null",
+     "-3",
+     "null",
+     "0",
+     "-2"
+    ],
+    "example": 1
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[\"MinStack\",\"push\",\"push\",\"push\",\"getMin\",\"pop\",\"top\",\"getMin\"]",
+     "[[],[-2],[0],[-3],[],[],[],[]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

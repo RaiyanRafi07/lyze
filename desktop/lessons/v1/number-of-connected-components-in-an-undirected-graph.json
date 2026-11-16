@@ -1,0 +1,101 @@
+{
+ "id": 323,
+ "slug": "number-of-connected-components-in-an-undirected-graph",
+ "title": "Number of Connected Components in an Undirected Graph",
+ "difficulty": "Medium",
+ "topics": [
+  "Graph",
+  "Union Find",
+  "Depth-First Search"
+ ],
+ "pattern": "union-find",
+ "patterns": [
+  "union-find",
+  "graph-dfs"
+ ],
+ "premium": false,
+ "description": "Count the connected groups in an undirected graph with vertices numbered from zero through n minus one. Isolated vertices count as components. Edges connect distinct vertices and are not repeated.",
+ "examples": [
+  {
+   "n": 1,
+   "input": "n = 5, edges = [[0,1],[1,2],[3,4]]",
+   "output": "2",
+   "explain": "Two groups: {0,1,2} and {3,4}.",
+   "raw": "Input: n = 5, edges = [[0,1],[1,2],[3,4]]\nOutput: 2\nExplanation: Two groups: {0,1,2} and {3,4}."
+  },
+  {
+   "n": 2,
+   "input": "n = 5, edges = [[0,1],[1,2],[2,3],[3,4]]",
+   "output": "1",
+   "explain": "All vertices connect, so there is one group.",
+   "raw": "Input: n = 5, edges = [[0,1],[1,2],[2,3],[3,4]]\nOutput: 1\nExplanation: All vertices connect, so there is one group."
+  }
+ ],
+ "constraints": [
+  "1 <= n <= 2000",
+  "1 <= edges.length <= 5000",
+  "endpoints satisfy 0 <= endpoint < n",
+  "isolated vertices count as components"
+ ],
+ "follow_ups": [],
+ "hints": [
+  "Union the endpoints of every edge, then count distinct roots.",
+  "A depth-first walk from each unvisited vertex also counts groups once.",
+  "Track visited vertices so an isolated vertex still forms its own group."
+ ],
+ "snippets": {
+  "java": "class Solution {\n    public int countComponents(int n, int[][] edges) {\n        return 0;\n    }\n}\n",
+  "cpp": "class Solution {\npublic:\n    int countComponents(int n, vector<vector<int>>& edges) {\n        return 0;\n    }\n};\n"
+ },
+ "solution": "Union-find over the edges, then count distinct set leaders; isolated vertices stay singletons. O(n + edges \u03b1(n)) time.",
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "countComponents",
+   "params": [
+    {
+     "name": "n",
+     "type": "int"
+    },
+    {
+     "name": "edges",
+     "type": "int[][]"
+    }
+   ],
+   "return": "int"
+  },
+  "tests": [
+   {
+    "args": [
+     "5",
+     "[[0,1],[1,2],[3,4]]"
+    ],
+    "expected": "2",
+    "example": 1
+   },
+   {
+    "args": [
+     "5",
+     "[[0,1],[1,2],[2,3],[3,4]]"
+    ],
+    "expected": "1",
+    "example": 2
+   },
+   {
+    "args": [
+     "1",
+     "[]"
+    ],
+    "expected": "1",
+    "example": 3
+   }
+  ]
+ },
+ "provenance": {
+  "kind": "independent-equivalent",
+  "sources": [
+   "https://neetcode.io/problems/count-connected-components/question?list=neetcode150"
+  ],
+  "note": "Statement authored from the brief for the native port; not copied. Generated tests are labeled."
+ }
+}

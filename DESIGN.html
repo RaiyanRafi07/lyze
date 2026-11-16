@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>R4 spec deck — annotated, both modes</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: #E8E2D4; color: #1A1712; padding: 28px; }
+  h2.sect { font-size: 13px; letter-spacing: .2em; margin: 28px 0 14px; max-width: 1280px; }
+  h2.sect:first-child { margin-top: 0; }
+  .sheet { max-width: 1280px; border: 2px solid #1A1712; margin-bottom: 8px; }
+  .sheet .cap { padding: 10px 14px; border-bottom: 2px solid #1A1712; font-size: 12px; font-weight: 900; letter-spacing: .12em; display: flex; justify-content: space-between; background: #1A1712; color: #F4F4F0; }
+  .sheet .cap .ann { font-weight: 400; letter-spacing: .04em; font-size: 11px; opacity: .8; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; }
+  .pair > div { padding: 18px; min-height: 260px; }
+  .th-light { background: #F7F2E7; color: #1A1712; }
+  .th-dark { background: #232733; color: #D8D3C6; border-left: 2px solid #1A1712; }
+  .mode { font-size: 10px; font-weight: 900; letter-spacing: .18em; opacity: .6; margin-bottom: 10px; }
+  .kick { font-size: 10px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; opacity: .65; margin-bottom: 8px; }
+  .t-display { font-size: 26px; font-weight: 900; letter-spacing: -.03em; }
+  .t-sec { font-size: 15px; font-weight: 900; }
+  .t-body { font-size: 13px; line-height: 1.6; }
+  .t-micro { font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+  .t-code { font-family: "JetBrains Mono", "Courier New", monospace; font-size: 12px; line-height: 1.7; }
+  .tok { display: inline-block; width: 44px; height: 22px; border: 2px solid currentColor; vertical-align: middle; margin-right: 6px; }
+  .btn { font-size: 11px; font-weight: 900; border: 2px solid currentColor; background: none; color: inherit; padding: 7px 12px; font-family: inherit; letter-spacing: .04em; }
+  .btn.go { background: #C2410C; border-color: #C2410C; color: #fff; } /* white 5.18 */
+  .box { border: 2px solid currentColor; padding: 8px 10px; font-size: 11px; margin-bottom: 8px; }
+  .cells { display: grid; grid-template-columns: repeat(4, 1fr); border: 2px solid currentColor; margin: 8px 0; }
+  .cells div { padding: 8px 4px; text-align: center; font-weight: 900; border-right: 2px solid currentColor; font-size: 13px; }
+  .cells div:last-child { border-right: 0; }
+  .cells small { display: block; font-weight: 400; font-size: 9px; opacity: .7; }
+  .th-dark .cells .cur { background: #D8D3C6; color: #232733; }
+  .th-light .cells .cur { background: #1A1712; color: #F7F2E7; }
+  .bar { height: 8px; border: 2px solid currentColor; position: relative; margin-top: 6px; }
+  .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 50%; background: currentColor; }
+  .bar u { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 6px; background: #E30613; }
+  .codeblock { border: 2px solid currentColor; padding: 8px 10px; font-family: "JetBrains Mono", monospace; font-size: 11px; line-height: 1.7; margin-bottom: 8px; }
+  .codeblock .hl { background: #1A1712; color: #F7F2E7; display: block; }
+  .th-dark .codeblock .hl { background: #D8D3C6; color: #232733; }
+  .row { display: flex; gap: 8px; align-items: baseline; border: 2px solid currentColor; border-bottom: 0; padding: 7px 10px; font-size: 11px; }
+  .row:last-child { border-bottom: 2px solid currentColor; }
+  .row .id { opacity: .55; font-size: 10px; }
+  .row .t { font-weight: 800; flex: 1; }
+  .row .d { font-size: 9px; font-weight: 900; letter-spacing: .08em; }
+  .row .due { font-size: 9px; font-weight: 900; background: #C2410C; color: #fff; padding: 1px 5px; }
+  .row.sel { background: #1A1712; color: #F7F2E7; }
+  .th-dark .row.sel { background: #D8D3C6; color: #232733; }
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid currentColor; border-bottom-width: 2px; font-size: 10px; font-weight: 900; letter-spacing: .1em; margin-bottom: 8px; }
+  .tabs div { padding: 7px; text-align: center; border-right: 2px solid currentColor; }
+  .tabs div:last-child { border-right: 0; }
+  .tabs .on { background: #1A1712; color: #F4F4F0; }
+  .th-dark .tabs .on { background: #D8D3C6; color: #232733; }
+  .rail { width: 44px; border: 2px solid currentColor; display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 10px; font-size: 14px; margin-bottom: 8px; }
+  .rail .fn { background: #FF5A00; color: #fff; width: 30px; height: 30px; display: grid; place-items: center; }
+  .badge { display: inline-block; background: #C00511; color: #fff; font-size: 10px; font-weight: 900; padding: 2px 8px; letter-spacing: .1em; margin-bottom: 6px; }
+  .th-dark .badge { background: #A8000E; }
+  .type-row { display: flex; gap: 14px; align-items: baseline; border-bottom: 1px solid currentColor; padding: 8px 0; }
+  .type-row .spec { font-size: 10px; opacity: .65; flex: none; width: 210px; font-weight: 700; }
+  .sw { display: inline-block; width: 60px; height: 28px; border: 2px solid currentColor; vertical-align: middle; margin-right: 8px; }
+  .do { color: #0E7C66; font-weight: 900; } .dont { color: #C00511; font-weight: 900; }
+  .frame { border: 2px solid currentColor; padding: 8px 10px; margin-bottom: 8px; }
+  .frame .fh { font-size: 10px; font-weight: 900; letter-spacing: .12em; margin-bottom: 6px; opacity: .7; }
+</style>
+</head>
+<body>
+<h2 class="sect">S0 · TYPE SYSTEM (named — zero new downloads, all already in the app)</h2>
+<div class="sheet"><div class="cap"><span>TYPE — roles, families, sizes</span><span class="ann">Families: grotesk = Helvetica Neue 900 (system chrome) · reading = Inter (loaded) · code = JetBrains Mono (loaded) · editorial accent = Fraunces (loaded, hero only)</span></div>
+<div class="pair"><div class="th-light"><div class="mode">SPEC · LIGHT</div><div id="typeSpec"></div></div>
+<div class="th-dark"><div class="mode">SAME ROLES · DARK</div><div class="t-display">Two Sum Aa 0123456789</div><div class="t-body" style="margin-top:6px">Body Inter 13/1.6 — Given nums and target, return indices.</div><div class="t-code" style="margin-top:6px">for (int i = 0; …) {</div><div class="t-micro" style="margin-top:6px">KICKER 10/900/0.16EM · EASY BADGE · STEP 4/8</div></div></div></div>
+
+<h2 class="sect">S1 · TOKENS (exact hex, both modes)</h2>
+<div class="sheet"><div class="cap"><span>TOKENS — paper, ink, function, signal, soft-dark</span><span class="ann">Contrast rule: body text ≥ 4.5:1, verified by computed sampling before sign-off</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT</div><div id="tokLight" style="font-size:11px;line-height:2.2"></div></div>
+<div class="th-dark"><div class="mode">DARK SOFT</div><div id="tokDark" style="font-size:11px;line-height:2.2"></div></div></div></div>
+
+<h2 class="sect">S2 · RAIL: COLLAPSED vs CATALOG-OPEN (drawer open state + closed state)</h2>
+<div class="sheet"><div class="cap"><span>RAIL + CATALOG DRAWER — both states</span><span class="ann">Rail 48px always visible · drawer collapses to rail-only · same chrome both modes</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT · DRAWER OPEN</div><div style="display:flex;gap:10px"><div class="rail"><span>▤</span><span class="fn">◔</span><span>✓</span><span>◇</span></div><div style="flex:1"><div class="box">⌕ Search 2913… · 124 of 2913</div><div class="row"><span class="id">#1</span><span class="t">Two Sum</span><span class="d">EASY ✓</span></div><div class="row sel"><span class="id">#217</span><span class="t">Contains Duplicate</span><span class="d">EASY</span></div><div class="row"><span class="id">#242</span><span class="t">Valid Anagram</span><span class="d">EASY</span></div></div></div></div>
+<div class="th-dark"><div class="mode">DARK · DRAWER OPEN</div><div style="display:flex;gap:10px"><div class="rail"><span>▤</span><span class="fn">◔</span><span>✓</span><span>◇</span></div><div style="flex:1"><div class="box">⌕ Search 2913… · 124 of 2913</div><div class="row"><span class="id">#1</span><span class="t">Two Sum</span><span class="d">EASY ✓</span></div><div class="row sel"><span class="id">#217</span><span class="t">Contains Duplicate</span><span class="d">EASY</span></div><div class="row"><span class="id">#242</span><span class="t">Valid Anagram</span><span class="d">EASY</span></div></div></div></div></div>
+<div class="sheet"><div class="cap"><span>RAIL-ONLY (DRAWER CLOSED) + CATALOG FILTERS</span><span class="ann">Collapse exposes full-width workspace · filters: All/Easy/Medium/Hard boxed, square selects</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT · CLOSED + FILTERS</div><div style="display:flex;gap:10px"><div class="rail"><span>▤</span><span class="fn">◔</span><span style="opacity:.4">✓</span><span style="opacity:.4">◇</span></div><div style="flex:1"><div class="box">FILTER THE LIBRARY</div><div class="box">All · Easy · Medium · Hard (boxed, active = ink fill)</div><div class="box">[ All status ▾ ] [ All patterns ▾ ] · square 2px selects</div></div></div></div>
+<div class="th-dark"><div class="mode">DARK · SAME</div><div style="display:flex;gap:10px"><div class="rail"><span>▤</span><span class="fn">◔</span><span style="opacity:.4">✓</span><span style="opacity:.4">◇</span></div><div style="flex:1"><div class="box">FILTER THE LIBRARY</div><div class="box">All · Easy · Medium · Hard (boxed, active = paper fill)</div><div class="box">[ All status ▾ ] [ All patterns ▾ ] · square 2px selects</div></div></div></div></div>
+
+<h2 class="sect">S3 · ANIMATION SECTION — 3 frames of one run (step 1 → 4 → 8) + transport states</h2>
+<div class="sheet"><div class="cap"><span>FRAMES — state progression, same geometry, only state changes</span><span class="ann">Rule: position = data · 240ms ease-out moves · scrub immediate · reduced-motion zeroes all</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT · FRAMES 1 / 4 / 8</div><div class="frame"><div class="fh">STEP 1/8 · SETUP — seen = {}</div><div class="cells"><div>2<small>idx 0</small></div><div>7<small>idx 1</small></div><div>11<small>idx 2</small></div><div>15<small>idx 3</small></div></div><div class="t-micro">No highlight yet — setup frame, note reads "nothing computed yet".</div></div><div class="frame"><div class="fh">STEP 4/8 · MISS — i=2, need −2, not seen</div><div class="cells"><div>2<small>idx 0</small></div><div>7<small>idx 1</small></div><div class="cur">11<small>CUR · i</small></div><div>15<small>idx 3</small></div></div><div class="bar"><i style="width:38%"></i><u style="left:38%"></u></div></div><div class="frame"><div class="fh">STEP 8/8 · ANSWER — pair [0,1] returned</div><div class="cells"><div class="cur">2<small>idx 0</small></div><div class="cur">7<small>idx 1</small></div><div>11<small>idx 2</small></div><div>15<small>idx 3</small></div></div><div class="bar"><i style="width:100%"></i><u style="left:100%"></u></div></div></div>
+<div class="th-dark"><div class="mode">DARK · SAME 3 FRAMES</div><div class="frame"><div class="fh">STEP 1/8 · SETUP — seen = {}</div><div class="cells"><div>2<small>idx 0</small></div><div>7<small>idx 1</small></div><div>11<small>idx 2</small></div><div>15<small>idx 3</small></div></div><div class="t-micro">No highlight yet — setup frame, note reads "nothing computed yet".</div></div><div class="frame"><div class="fh">STEP 4/8 · MISS — i=2, need −2, not seen</div><div class="cells"><div>2<small>idx 0</small></div><div>7<small>idx 1</small></div><div class="cur">11<small>CUR · i</small></div><div>15<small>idx 3</small></div></div><div class="bar"><i style="width:38%"></i><u style="left:38%"></u></div></div><div class="frame"><div class="fh">STEP 8/8 · ANSWER — pair [0,1] returned</div><div class="cells"><div class="cur">2<small>idx 0</small></div><div class="cur">7<small>idx 1</small></div><div>11<small>idx 2</small></div><div>15<small>idx 3</small></div></div><div class="bar"><i style="width:100%"></i><u style="left:100%"></u></div></div></div></div></div>
+
+<h2 class="sect">S4 · QUESTIONS LIST (all row states) + TABS (Solve-first order)</h2>
+<div class="sheet"><div class="cap"><span>ROWS — default / selected / solved / due / new · TABS — 01 SOLVE 02 LEARN 03 PRACTICE</span><span class="ann">Tab order flips with keyboard 1/2/3 remap · R4 tabs get numbered counters in build</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT</div><div class="tabs"><div class="on">01 SOLVE<small style="display:block;font-weight:400">RUN YOUR CODE</small></div><div>02 LEARN</div><div>03 PRACTICE</div></div><div class="row"><span class="id">#1</span><span class="t">Two Sum</span><span>✓</span><span class="d">EASY</span></div><div class="row sel"><span class="id">#217</span><span class="t">Contains Duplicate</span><span class="d">EASY</span></div><div class="row"><span class="id">#125</span><span class="t">Valid Palindrome</span><span class="d" style="background:#FF5A00;color:#fff;padding:0 4px">due</span></div><div class="row"><span class="id">#20</span><span class="t">Valid Parentheses</span><span class="d">NEW</span></div></div>
+<div class="th-dark"><div class="mode">DARK</div><div class="tabs"><div class="on">01 SOLVE<small style="display:block;font-weight:400">RUN YOUR CODE</small></div><div>02 LEARN</div><div>03 PRACTICE</div></div><div class="row"><span class="id">#1</span><span class="t">Two Sum</span><span>✓</span><span class="d">EASY</span></div><div class="row sel"><span class="id">#217</span><span class="t">Contains Duplicate</span><span class="d">EASY</span></div><div class="row"><span class="id">#125</span><span class="t">Valid Palindrome</span><span class="d" style="background:#FF5A00;color:#fff;padding:0 4px">due</span></div><div class="row"><span class="id">#20</span><span class="t">Valid Parentheses</span><span class="d">NEW</span></div></div></div>
+
+<h2 class="sect">S5 · DO / DON'T (consistency contract)</h2>
+<div class="sheet"><div class="cap"><span>CONTRACT — what consistent means, checkable</span><span class="ann">Every rule below is greppable or computed-measurable — no taste calls in review</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT</div><div style="font-size:11px;line-height:2"><span class="do">DO</span> radius 0 on every box · 2px ink borders · orange = action only<br><span class="do">DO</span> kickers 10px/900/0.16em uppercase · titles 900 tight<br><span class="dont">DON'T</span> rounded anything (audit found 6/8/10/15px) · gradients · glows<br><span class="dont">DON'T</span> bare colored text as state (always boxed badge)</div></div>
+<div class="th-dark"><div class="mode">DARK</div><div style="font-size:11px;line-height:2"><span class="do">DO</span> same geometry, softened tokens (#232733/#D8D3C6/#4A5263)<br><span class="do">DO</span> current = paper fill (light) / beige fill (dark) + ink text<br><span class="dont">DON'T</span> blue-white text on near-black (eye-strain fail)<br><span class="dont">DON'T</span> new shadows, blurs, or radii for "depth"</div></div></div>
+<h2 class="sect">S6 · SETTINGS + VS CODE THEME WIRING (dialog, import, motion, reset)</h2>
+<div class="sheet"><div class="cap"><span>SETTINGS — theme list · custom import · motion · danger zone</span><span class="ann">Dialog: 2px frame, square, R4 header · radios become boxed rows · proof: R4 verified live under Dracula</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT</div><div class="box" style="font-weight:900;letter-spacing:.12em;display:flex;justify-content:space-between"><span>SETTINGS · APPEARANCE</span><span>✕</span></div><div class="row"><span class="t">● Light (VS Code)</span><span class="d">ACTIVE</span></div><div class="row"><span class="t">○ Dark+</span><span class="d"></span></div><div class="row"><span class="t">○ Dracula</span><span class="d"></span></div><div class="row"><span class="t">○ My-chalk (custom)</span><span class="d">Remove</span></div><div class="box">⤒ Paste VS Code color-theme JSON… <b>Import</b> · <b>Choose File</b></div><div class="box">Motion: ○ System ○ Reduce ● Full &nbsp;·&nbsp; Progress: <b>Reset all…</b> (2-click confirm)</div></div>
+<div class="th-dark"><div class="mode">DARK — WIRING: R4 ROLES → VS CODE VARS (LIVE-PROVEN)</div><div class="box">paper/surface/text/border ← var(--bg/--surface-*/--text/--border-*) · 13 ports + customs recolor R4 live (verified: Dracula purples visor, R4 chrome holds)</div><div class="box">FIXED always: function #FF5A00/#C2410C · signal #E30613/#C00511/#FF6B6B/#A8000E · code slabs stay dark in light (THEME §8)</div><div class="row"><span class="t">○ Light+</span><span class="d"></span></div><div class="row"><span class="t">● Dracula</span><span class="d">ACTIVE</span></div><div class="row"><span class="t">○ Tokyo Night</span><span class="d"></span></div></div></div>
+<h2 class="sect">S7 · COVERAGE CLOSEOUT — trace · tutor · 3D · disclosures · help · home · mobile · empty · steps row</h2>
+<div class="sheet"><div class="cap"><span>TRACE-MY-RUN + AI TUTOR DRAWER</span><span class="ann">Trace: honest frames or explicit decline · Tutor: tabs + BYOK key, degraded state without key</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT</div><div class="box"><b>TRACE · your loop, 3 iterations</b><br><span style="font-family:monospace;font-size:11px">i=0 need=7 miss → store 7 · i=1 need=2 HIT → return [0,1]</span></div><div class="box">Divergence marker: <b style="background:#1A1712;color:#F7F2E7;padding:0 4px">frame 2 ≠ your frame 2</b> — black flag, never red text</div><div class="box">No-loop fallback: <i>“Trace unavailable for this solution — showing reference run.”</i> (explicit, never faked)</div><div class="box"><b>TUTOR · Explain / Animate / Review</b> · BYOK key field [••••] [Save] · <i>No key: buttons read “not configured”, everything else works.</i></div></div>
+<div class="th-dark"><div class="mode">DARK — SAME CHROME, SOFT TOKENS</div><div class="box"><b>TRACE · your loop, 3 iterations</b><br><span style="font-family:monospace;font-size:11px">i=0 need=7 miss → store 7 · i=1 need=2 HIT → return [0,1]</span></div><div class="box">Divergence marker: <b style="background:#D8D3C6;color:#232733;padding:0 4px">frame 2 ≠ your frame 2</b></div><div class="box">No-loop fallback: <i>“Trace unavailable — reference run shown.”</i></div><div class="box"><b>TUTOR · Explain / Animate / Review</b> · BYOK [••••] [Save] · <i>no-key degrade as light</i></div></div></div>
+<div class="sheet"><div class="cap"><span>3D OVERVIEW + DISCLOSURES (WHY/TRAPS · HINTS · EDITORIAL · NOTES) + HELP MENU</span><span class="ann">Cinema replays the same scene data (orbit/zoom toggle) · disclosures stay closed by default</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT</div><div class="box"><b>3D OVERVIEW</b> — same frames, perspective orbit + wheel zoom + depth fog · toggle returns to 2D (2D stays default)</div><div class="box">▸ <b>Why it works &amp; common mistakes</b> <span style="opacity:.6">— closed chevron, opens inline</span></div><div class="box">▸ Hints (2) · ▸ Editorial · ▸ My notes <span style="opacity:.6">(drawer textarea, synced)</span></div><div class="box">HELP (?) — menu: <b>Shortcuts</b> · Open in browser tab · <span style="opacity:.6">keys 1/2/3 · s · j/k · / · Ctrl+Enter · ←/→ · space</span></div></div>
+<div class="th-dark"><div class="mode">DARK — IDENTICAL STRUCTURE</div><div class="box"><b>3D OVERVIEW</b> — same scene data, orbit/zoom · toggle back to 2D</div><div class="box">▸ <b>Why it works &amp; common mistakes</b></div><div class="box">▸ Hints (2) · ▸ Editorial · ▸ My notes</div><div class="box">HELP (?) — Shortcuts · Open in browser · keys 1/2/3 · s · j/k · / · Ctrl+Enter · ←/→ · space</div></div></div>
+<div class="sheet"><div class="cap"><span>HOME ANNOTATED + MOBILE 390 RULES + EMPTY STATES + STEPS/INPUT ROW</span><span class="ann">Home: hero/kicker/CTA/ladder/patterns/footer per type scale · mobile: stacked scroll, thumb-reach transport</span></div>
+<div class="pair"><div class="th-light"><div class="mode">LIGHT</div><div class="box"><b>HOME</b> — kicker 10/900 · title 30/900 tight · CTA orange-black-text (5.71) · ladder 01/02/03 numbered · patterns grid · footer strip</div><div class="box"><b>STEPS ROW</b> — pills 1..n, current = ink fill · <b>sparkline</b> ops micro-chart · <b>input presets</b> Sorted/Equal/Single/Dup/Random + shareable ?in= hash</div><div class="box"><b>EMPTY</b> — “Nothing due — solved problems return here.” · empty search: “No matches — Reset filters”</div></div>
+<div class="th-dark"><div class="mode">DARK · 390PX MOCK →</div><div style="width:300px;border:2px solid currentColor;padding:10px;font-size:11px"><div style="font-weight:900;letter-spacing:.14em;font-size:10px;margin-bottom:6px">390PX — STACKED, NO SIDE DRAWER</div><div class="box">Rail 44px icons only · tabs full-width · panels stack code→visual</div><div class="box">Transport bottom-sticky, ≥44px targets · scrub full-width · catalog becomes overlay sheet</div><div class="box">Type floor holds: nothing informative under 11px (verified rule)</div></div></div></div>
+<script>
+(function () {
+  const types = [
+    ['Display — Helvetica Neue 900 24–34px −0.03em', '<span class="t-display">Two Sum Aa 0123</span>', 'Topbar title · hero · walkthrough headline'],
+    ['Kicker — sys 900 10–11px +0.16em UPPER', '<span style="font-size:10px;font-weight:900;letter-spacing:.16em">N°001 — ARRAYS &amp; HASHING</span>', 'Kickers · tray labels · step labels'],
+    ['Body — Inter 400 13–14px/1.6', '<span style="font-size:13px">Given nums and target, return indices.</span>', 'Prose · notes · rows · disclosures'],
+    ['Code — JetBrains Mono 12–13px/1.7', '<span class="t-code">for (int i = 0; …) {</span>', 'Slabs · IO blocks · seen map · transport'],
+    ['Micro — Inter 700 10–11px', '<span class="t-micro">STEP 4/8 · EASY · 124 OF 2913</span>', 'Badges · pills · transport count'],
+  ];
+  const el = document.getElementById('typeSpec');
+  el.innerHTML = types.map(function (r) { return '<div class="type-row"><span class="spec">' + r[0] + '</span><span>' + r[1] + '</span><span style="font-size:10px;opacity:.6">' + r[2] + '</span></div>'; }).join('');
+  const toks = function (list) { return list.map(function (t) { return '<span class="tok" style="background:' + t[1] + '"></span><b>' + t[0] + '</b> ' + t[1] + ' — ' + t[2]; }).join('<br>'); };
+  document.getElementById('tokLight').innerHTML = toks([['paper', '#F7F2E7', 'field (vote A/B/C open)'], ['ink', '#1A1712', 'text/rules/current fills'], ['function', '#FF5A00', 'graphics/accents/knobs ONLY — never body text (2.80!)'], ['function-ink', '#C2410C', 'ALL orange text + primary button fills (white 5.18)'], ['signal', '#E30613', 'large/bold only (4.37)'], ['signal-ink', '#C00511', 'ALL red text + badges on paper (5.75/6.42)'], ['ok', '#0E7C66', 'pass/verdict edge (dark: #57E39A)']]);
+  document.getElementById('tokDark').innerHTML = toks([['bg-soft', '#232733', 'lifted panels (not #0d1526)'], ['text-warm', '#D8D3C6', 'warm gray, not blue-white (9.97)'], ['border', '#4A5263', 'softened rules'], ['cell', '#EFE9DB', 'paper cells, ink text'], ['function', '#FF5A00', 'text on dark OK (4.76); fills stay bright'], ['signal-bright', '#FF6B6B', 'red TEXT on dark (5.37)'], ['signal-deep', '#A8000E', 'dark badge fills, white text (7.86)'], ['muted', '#A8A294', 'secondary text on dark (5.86)']]);
+})();
+</script>
+<h2 class="sect">S9 · REFERENCE APPENDIX — curriculum, invariants, direction, release scope</h2>
+<div class="sheet"><div class="cap"><span>CURRICULUM CHAINS — prerequisite order + misconceptions</span><span class="ann">Learn walks chains in this order; each step names the trap it defuses</span></div>
+<div class="pair"><div class="th-light"><div class="mode">CHAINS</div><div class="t-micro">ARRAYS&rarr;MAPS</div><div class="t-body">running-sum &rarr; pivot &rarr; two-sum &rarr; contains-duplicate &rarr; valid-parentheses &rarr; longest-substring. Traps: values-instead-of-indices · check-after-insert reuses the element · empty-map is a valid state.</div><div class="t-micro" style="margin-top:8px">TREES DFS&rarr;BFS</div><div class="t-body">inorder &rarr; pre/postorder &rarr; max-depth &rarr; level-order. Traps: visit-on-push vs visit-on-pop · depth vs level index · storage order &ne; visit order.</div></div>
+<div class="th-dark"><div class="mode">CHAINS, CONTINUED</div><div class="t-micro">GRIDS (ISLANDS)</div><div class="t-body">number-of-islands &rarr; max-area-of-island. Traps: mark-visited-on-enqueue · 4-directional only · count vs measure.</div><div class="t-micro" style="margin-top:8px">DP 1D&rarr;2D</div><div class="t-body">fibonacci &rarr; climbing-stairs &rarr; house-robber &rarr; counting-bits &rarr; LCS &rarr; edit-distance. Traps: dependency arrows + answer cell in 2D.</div></div></div>
+<div class="sheet"><div class="cap"><span>FAMILY INVARIANTS — what each picture must make visible</span><span class="ann">A frame without its invariant state fails review. No invented geometry.</span></div>
+<div class="pair"><div class="th-light"><div class="mode">INVARIANTS 1/2</div><div class="t-body">dp-2d: cell(i,j)=f(two cells read) — grid + dependency arrows + answer badge. dp-1d: dp[i]=f(dp[i-1],dp[i-2]) — value row + previous one/two pointers. graph-bfs: frontier is the visited/unvisited boundary; distance = level. graph-dfs: stack = current path; pop = backtrack. backtracking: choose&rarr;explore&rarr;un-choose as a tree path; pruned branches dimmed.</div></div>
+<div class="th-dark"><div class="mode">INVARIANTS 2/2</div><div class="t-body">sliding-window: window [l,r] satisfies a count invariant — char-count table + window band. monotonic-stack: monotone candidates; a pop resolves the popped element. intervals: merged blocks grow while next.start &le; current.end — 1-D timeline. heap: parent &ge; children; top-k = heap of size k. union-find: find(x) = root; compression flattens.</div></div></div>
+<div class="sheet"><div class="cap"><span>DIRECTION + RELEASE SCOPE — calm workspace, honest states</span><span class="ann">First release: NeetCode 150 + Blind 75. Every other lesson degrades gracefully.</span></div>
+<div class="pair"><div class="th-light"><div class="mode">DIRECTION</div><div class="t-body">Calm coding workspace: neutral surfaces, one blue accent, progressive disclosure, 14px interface / 12–13px secondary / 20px headings, 4/8/12/16/24 spacing, hairline separators, square corners. Learn ≈44% source / 56% visual; transport stays one row. Settings: Appearance + Motion + honest import/reset only. Loading keeps layout; errors name a recovery action; unsupported walkthroughs show starter + Solve action, never fake controls. Trace shows the user's real run or an explicit decline.</div></div>
+<div class="th-dark"><div class="mode">SCOPE</div><div class="t-body">Release target: the 150 curriculum lessons fully featured (walkthrough + line notes + 3 drills + judge, per-slug evidence); all other 2,600+ judge problems open, grade, and fall back honestly — proven by the <span class="t-code">non_curriculum_judge_problems_degrade_gracefully</span> test. SQL/shell problems are out of scope for the code judge. Release gate: 134/134 Java+C++ parity, 83+ unit tests green, headless resource check green, per-slug acceptance before any VERIFIED_COMPLETE claim.</div></div></div>
+</body>
+</html>

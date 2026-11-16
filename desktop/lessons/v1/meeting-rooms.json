@@ -1,0 +1,104 @@
+{
+ "id": 252,
+ "slug": "meeting-rooms",
+ "title": "Meeting Rooms",
+ "difficulty": "Easy",
+ "topics": [
+  "Array",
+  "Sorting",
+  "Intervals"
+ ],
+ "pattern": "intervals",
+ "patterns": [
+  "intervals",
+  "sorting"
+ ],
+ "premium": false,
+ "description": "Decide whether one person can attend every meeting interval. Input order is arbitrary. Endpoints touching at the same time do not conflict: an ending meeting frees the person for a meeting starting then.",
+ "examples": [
+  {
+   "n": 1,
+   "input": "intervals = [[0,30],[5,10],[15,20]]",
+   "output": "false",
+   "explain": "The first meeting overlaps the other two.",
+   "raw": "Input: intervals = [[0,30],[5,10],[15,20]]\nOutput: false\nExplanation: The first meeting overlaps the other two."
+  },
+  {
+   "n": 2,
+   "input": "intervals = [[5,8],[9,15]]",
+   "output": "true",
+   "explain": "Touching endpoints do not conflict.",
+   "raw": "Input: intervals = [[5,8],[9,15]]\nOutput: true\nExplanation: Touching endpoints do not conflict."
+  }
+ ],
+ "constraints": [
+  "0 <= intervals.length <= 500",
+  "0 <= start < end <= 1000000",
+  "touching endpoints are compatible"
+ ],
+ "follow_ups": [],
+ "hints": [
+  "Sort by start time, then one linear scan suffices.",
+  "Track the latest end seen so far; a start before it means a clash.",
+  "An empty schedule is trivially attendable."
+ ],
+ "snippets": {
+  "java": "class Interval {\n    int start;\n    int end;\n    Interval() { this(0, 0); }\n    Interval(int s, int e) { start = s; end = e; }\n}\nclass Solution {\n    public boolean canAttendMeetings(Interval[] intervals) {\n        return false;\n    }\n}\n",
+  "cpp": "struct Interval {\n    int start;\n    int end;\n    Interval(): start(0), end(0) {}\n    Interval(int s, int e): start(s), end(e) {} {};\nclass Solution {\npublic:\n    bool canAttendMeetings(vector<Interval>& intervals) {\n        return false;\n    }\n};\n"
+ },
+ "solution": "Sort by start and scan once, keeping the furthest end seen; any start before it collides. O(n log n) time for the sort.",
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "canAttendMeetings",
+   "params": [
+    {
+     "name": "intervals",
+     "type": "interval[]"
+    }
+   ],
+   "return": "boolean"
+  },
+  "tests": [
+   {
+    "args": [
+     "[[0,30],[5,10],[15,20]]"
+    ],
+    "expected": "false",
+    "example": 1
+   },
+   {
+    "args": [
+     "[[5,8],[9,15]]"
+    ],
+    "expected": "true",
+    "example": 2
+   },
+   {
+    "args": [
+     "[]"
+    ],
+    "expected": "true",
+    "example": 3
+   }
+  ]
+ },
+ "provenance": {
+  "kind": "independent-equivalent",
+  "sources": [
+   "https://neetcode.io/problems/meeting-schedule/question?list=allNC"
+  ],
+  "note": "Statement authored from the brief for the native port; not copied. Generated tests are labeled. NeetCode uses Interval objects; canAttendMeetings. Interval construction per judge extension."
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[[0,30],[5,10],[15,20]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

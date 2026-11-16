@@ -1,0 +1,63 @@
+{
+ "slug": "reorder-list",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "reorderList",
+   "params": [
+    {
+     "name": "head",
+     "type": "ListNode"
+    }
+   ],
+   "return": "void"
+  },
+  "tests": [
+   {
+    "args": [
+     "[1,2,3,4]"
+    ],
+    "expected": "[[1,4,2,3]]",
+    "example": 1
+   },
+   {
+    "args": [
+     "[1,2,3,4,5]"
+    ],
+    "expected": "[[1,5,2,4,3]]",
+    "example": 2
+   }
+  ],
+  "mutates": [
+   0
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[1,2,3,4]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ],
+  "signature": {
+   "name": "reorderList",
+   "params": [
+    {
+     "name": "head",
+     "type": "ListNode"
+    }
+   ],
+   "return": "void"
+  }
+ }
+}

@@ -1,0 +1,137 @@
+{
+ "slug": "time-based-key-value-store",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "TimeMap",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "set",
+      "args": [
+       {
+        "type": "string",
+        "value": "foo"
+       },
+       {
+        "type": "string",
+        "value": "bar"
+       },
+       {
+        "type": "int",
+        "value": "1"
+       }
+      ]
+     },
+     {
+      "method": "get",
+      "args": [
+       {
+        "type": "string",
+        "value": "foo"
+       },
+       {
+        "type": "int",
+        "value": "1"
+       }
+      ],
+      "returns": "string"
+     },
+     {
+      "method": "get",
+      "args": [
+       {
+        "type": "string",
+        "value": "foo"
+       },
+       {
+        "type": "int",
+        "value": "3"
+       }
+      ],
+      "returns": "string"
+     },
+     {
+      "method": "set",
+      "args": [
+       {
+        "type": "string",
+        "value": "foo"
+       },
+       {
+        "type": "string",
+        "value": "bar2"
+       },
+       {
+        "type": "int",
+        "value": "4"
+       }
+      ]
+     },
+     {
+      "method": "get",
+      "args": [
+       {
+        "type": "string",
+        "value": "foo"
+       },
+       {
+        "type": "int",
+        "value": "4"
+       }
+      ],
+      "returns": "string"
+     },
+     {
+      "method": "get",
+      "args": [
+       {
+        "type": "string",
+        "value": "foo"
+       },
+       {
+        "type": "int",
+        "value": "5"
+       }
+      ],
+      "returns": "string"
+     }
+    ],
+    "expected": [
+     "null",
+     "bar",
+     "bar",
+     "null",
+     "bar2",
+     "bar2"
+    ],
+    "example": 1
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[\"set\",\"get\",\"get\",\"set\",\"get\",\"get\"]",
+     "[[\"foo\",\"bar\",1],[\"foo\",1],[\"foo\",3],[\"foo\",\"bar2\",4],[\"foo\",4],[\"foo\",5]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

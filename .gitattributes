@@ -1,0 +1,13 @@
+* text=auto eol=crlf
+*.rs text eol=lf
+*.mjs text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.ps1 text eol=crlf
+*.iss text eol=crlf
+*.png binary
+*.ico binary
+*.ttf binary
+*.rgba binary

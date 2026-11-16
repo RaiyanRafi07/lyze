@@ -1,0 +1,22 @@
+# build outputs (regenerate: cargo build / stage.py / package.py)
+desktop/target/
+*.zip
+*.exe
+
+# ui-loop run artifacts (baselines are tracked)
+.workers/jobs/ui-loop/shots/
+.workers/jobs/ui-loop/diffs/
+.workers/jobs/ui-loop/latest.json
+
+# local user data: real progress, drafts, solved code — never commit
+plugin/data/progress.json
+*.local.json
+
+# logs and OS junk
+*.log
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*~

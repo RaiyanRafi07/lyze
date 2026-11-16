@@ -1,0 +1,144 @@
+{
+ "id": 271,
+ "slug": "encode-and-decode-strings",
+ "title": "Encode and Decode Strings",
+ "difficulty": "Medium",
+ "topics": [
+  "Array",
+  "String"
+ ],
+ "pattern": "arrays-hashing",
+ "patterns": [
+  "arrays-hashing",
+  "strings"
+ ],
+ "premium": false,
+ "description": "Design two routines that work as a pair. The first routine takes a list of text values and packs them into one flat string. The second routine takes only that flat string and must rebuild the original list in order, with every entry identical.\n\nUse length-prefix framing: write each entry as its decimal length, then '#', then the raw entry. The decoder reads the length, takes exactly that many characters, and repeats. Entries may be empty, and the whole list may be empty. The decoder sees only the payload string.",
+ "examples": [
+  {
+   "n": 1,
+   "input": "strs = [\"Hello\",\"World\"]",
+   "output": "[\"Hello\",\"World\"]",
+   "explain": "Pack then unpack restores both entries in order.",
+   "raw": "Input: strs = [\"Hello\",\"World\"]\nOutput: [\"Hello\",\"World\"]\nExplanation: Pack then unpack restores both entries in order."
+  },
+  {
+   "n": 2,
+   "input": "strs = []",
+   "output": "[]",
+   "explain": "Empty input packs to an empty payload and unpacks to an empty list.",
+   "raw": "Input: strs = []\nOutput: []\nExplanation: Empty input packs to an empty payload and unpacks to an empty list."
+  },
+  {
+   "n": 3,
+   "input": "strs = [\"\"]",
+   "output": "[\"\"]",
+   "explain": "An empty entry round-trips as an empty entry.",
+   "raw": "Input: strs = [\"\"]\nOutput: [\"\"]\nExplanation: An empty entry round-trips as an empty entry."
+  }
+ ],
+ "constraints": [
+  "0 <= strs.length <= 99",
+  "0 <= strs[i].length <= 199",
+  "strs[i] may hold any ASCII value except that '#' inside an entry is data, never a boundary",
+  "decode receives only the encoded payload, no hidden state"
+ ],
+ "follow_ups": [],
+ "hints": [
+  "Record the length of each entry before its content, for example len plus '#' plus the raw entry.",
+  "A plain separator fails because entries may contain that same separator or be empty.",
+  "The decoder reads exactly len characters after each '#'."
+ ],
+ "snippets": {
+  "java": "import java.util.*;\nclass Codec {\n    public String encode(List<String> strs) {\n        return \"\";\n    }\n    public List<String> decode(String s) {\n        return new ArrayList<>();\n    }\n}\n",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Codec {\npublic:\n    string encode(vector<string> strs) {\n        return \"\";\n    }\n    vector<string> decode(string s) {\n        return {};\n    }\n};\n"
+ },
+ "solution": "Encode with length-prefix framing and decode by reading each declared length. Both routines scan once: O(total characters) time. Correctness follows because the decoder consumes exactly the characters the encoder announced, so entries, including empty ones, round-trip intact.",
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "Codec",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "encode",
+      "args": [
+       {
+        "type": "List<String>",
+        "value": "[\"Hello\",\"World\"]"
+       }
+      ],
+      "returns": "string"
+     },
+     {
+      "method": "decode",
+      "args": [
+       {
+        "prev": 0
+       }
+      ],
+      "returns": "string[]"
+     }
+    ],
+    "expected": [
+     "\"5#Hello5#World\"",
+     "[\"Hello\",\"World\"]"
+    ],
+    "example": 1
+   },
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "encode",
+      "args": [
+       {
+        "type": "List<String>",
+        "value": "[\"\"]"
+       }
+      ],
+      "returns": "string"
+     },
+     {
+      "method": "decode",
+      "args": [
+       {
+        "prev": 0
+       }
+      ],
+      "returns": "string[]"
+     }
+    ],
+    "expected": [
+     "\"0#\"",
+     "[\"\"]"
+    ],
+    "example": 2
+   }
+  ]
+ },
+ "provenance": {
+  "kind": "independent-equivalent",
+  "sources": [
+   "https://neetcode.io/problems/string-encode-and-decode/question?list=blind75"
+  ],
+  "note": "Statement authored from the brief for the native port; not copied. Generated tests are labeled. Framing fixed to length-prefix so decode tests are deterministic."
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[\"Hello\",\"World\"]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

@@ -1,0 +1,105 @@
+{
+ "slug": "implement-trie-prefix-tree",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "Trie",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "insert",
+      "args": [
+       {
+        "type": "string",
+        "value": "apple"
+       }
+      ]
+     },
+     {
+      "method": "search",
+      "args": [
+       {
+        "type": "string",
+        "value": "apple"
+       }
+      ],
+      "returns": "boolean"
+     },
+     {
+      "method": "search",
+      "args": [
+       {
+        "type": "string",
+        "value": "app"
+       }
+      ],
+      "returns": "boolean"
+     },
+     {
+      "method": "startsWith",
+      "args": [
+       {
+        "type": "string",
+        "value": "app"
+       }
+      ],
+      "returns": "boolean"
+     },
+     {
+      "method": "insert",
+      "args": [
+       {
+        "type": "string",
+        "value": "app"
+       }
+      ]
+     },
+     {
+      "method": "search",
+      "args": [
+       {
+        "type": "string",
+        "value": "app"
+       }
+      ],
+      "returns": "boolean"
+     }
+    ],
+    "expected": [
+     "null",
+     "true",
+     "false",
+     "true",
+     "null",
+     "true"
+    ],
+    "example": 1
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[\"Trie\",\"insert\",\"search\",\"search\",\"startsWith\",\"insert\",\"search\"]",
+     "[[],[\"apple\"],[\"apple\"],[\"app\"],[\"app\"],[\"apple\"],[\"app\"]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

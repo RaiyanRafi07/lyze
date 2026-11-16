@@ -1,0 +1,63 @@
+{
+ "slug": "set-matrix-zeroes",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "setZeroes",
+   "params": [
+    {
+     "name": "matrix",
+     "type": "int[][]"
+    }
+   ],
+   "return": "void"
+  },
+  "tests": [
+   {
+    "args": [
+     "[[1,1,1],[1,0,1],[1,1,1]]"
+    ],
+    "expected": "[[[1,0,1],[0,0,0],[1,0,1]]]",
+    "example": 1
+   },
+   {
+    "args": [
+     "[[0,1,2,0],[3,4,5,2],[1,3,1,5]]"
+    ],
+    "expected": "[[[0,0,0,0],[0,4,5,0],[0,3,1,0]]]",
+    "example": 2
+   }
+  ],
+  "mutates": [
+   0
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[[1,1,1],[1,0,1],[1,1,1]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ],
+  "signature": {
+   "name": "setZeroes",
+   "params": [
+    {
+     "name": "matrix",
+     "type": "int[][]"
+    }
+   ],
+   "return": "void"
+  }
+ }
+}

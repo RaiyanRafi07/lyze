@@ -1,0 +1,82 @@
+{
+ "slug": "find-median-from-data-stream",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "MedianFinder",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "addNum",
+      "args": [
+       {
+        "type": "int",
+        "value": "1"
+       }
+      ]
+     },
+     {
+      "method": "addNum",
+      "args": [
+       {
+        "type": "int",
+        "value": "2"
+       }
+      ]
+     },
+     {
+      "method": "findMedian",
+      "args": [],
+      "returns": "double"
+     },
+     {
+      "method": "addNum",
+      "args": [
+       {
+        "type": "int",
+        "value": "3"
+       }
+      ]
+     },
+     {
+      "method": "findMedian",
+      "args": [],
+      "returns": "double"
+     }
+    ],
+    "expected": [
+     "null",
+     "null",
+     "1.5",
+     "null",
+     "2.0"
+    ],
+    "example": 1
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[{\"op\":\"add\",\"num\":1},{\"op\":\"add\",\"num\":2},{\"op\":\"find\"},{\"op\":\"add\",\"num\":3},{\"op\":\"find\"}]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

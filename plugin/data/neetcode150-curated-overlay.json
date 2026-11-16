@@ -1,0 +1,337 @@
+{
+  "schema": "neetcode150-curated-overlay/v1",
+  "provenance": {
+    "kind": "curated-overlay",
+    "membershipSource": "docs/NEETCODE_150.json (150 rows, localRecord=false => 7 missing)",
+    "statementPolicy": "No official LeetCode statements, examples, constraints or signatures are reproduced here. Each record carries a short source-equivalent curated summary plus explicit sourceLink / alternativeSource provenance. Verified judge stays null.",
+    "verifiedAt": "2026-11-07",
+    "ownerBrief": "owner-reviews/missing150-source-briefs.json + per-problem worker folders in this wave (lead reconciles records; this file defines the additive shape only)"
+  },
+  "records": [
+    {
+      "slug": "encode-and-decode-strings",
+      "title": "Encode and Decode Strings",
+      "group": "Arrays & Hashing",
+      "blind75": true,
+      "localRecord": false,
+      "overlayRecord": true,
+      "sourceLink": "https://leetcode.com/problems/encode-and-decode-strings/",
+      "alternativeSource": "https://www.lintcode.com/problem/659/",
+      "difficultyCurated": "Medium",
+      "difficultyProvenance": "curated estimate from public practice ordering; not an official difficulty claim",
+      "patternCurated": "strings",
+      "patternsCurated": ["strings", "design"],
+      "topicsCurated": ["String", "Design"],
+      "statement": {
+        "kind": "curated-summary",
+        "text": "Curated summary (not the official statement): design a reversible encoding that packs a list of strings into one string and unpacks it again, handling any characters including delimiters. See the official statement via sourceLink, or the freely accessible equivalent via alternativeSource.",
+        "officialStatement": "NOT INCLUDED — open sourceLink / alternativeSource."
+      },
+      "examplesIllustrative": [],
+      "judge": {
+        "mode": "round-trip",
+        "codecClass": "Codec",
+        "signature": { "name": "encode", "params": [{ "name": "strs", "type": "string[]" }], "return": "string" },
+        "decode": { "name": "decode", "params": [{ "name": "s", "type": "string" }], "return": "string[]" },
+        "tests": [
+          { "args": ["[\"Hello\",\"World\"]"], "expected": "[\"Hello\",\"World\"]", "example": 1 },
+          { "args": ["[\"\"]"], "expected": "[\"\"]", "example": 2 },
+          { "args": ["[]"], "expected": "[]", "example": 0 },
+          { "args": ["[\"#\",\"12#3\"]"], "expected": "[\"#\",\"12#3\"]", "example": 0 },
+          { "args": ["[\"\",\"#\",\"99#\"]"], "expected": "[\"\",\"#\",\"99#\"]", "example": 0 }
+        ]
+      },
+      "judgeProposal": {
+        "status": "promoted-from-staged-profile",
+        "signature": "encode(string[])->string + decode(string)->string[] (round-trip)",
+        "note": "No official text reproduced. Staged profile from delivery/judge-new-codec-grid (verified 2026-11-15); harness compares decode(encode(input)) with ordered equality, encoded spelling never compared."
+      },
+      "features": { "walkthrough": false, "notes": false, "practice": false, "judge": false }
+    },
+    {
+      "slug": "walls-and-gates",
+      "title": "Walls And Gates",
+      "group": "Graphs",
+      "blind75": false,
+      "localRecord": false,
+      "overlayRecord": true,
+      "sourceLink": "https://leetcode.com/problems/walls-and-gates/",
+      "alternativeSource": "https://www.lintcode.com/problem/663/",
+      "difficultyCurated": "Medium",
+      "difficultyProvenance": "curated estimate from public practice ordering; not an official difficulty claim",
+      "patternCurated": "graph-bfs",
+      "patternsCurated": ["graph-bfs", "matrix"],
+      "topicsCurated": ["Breadth-First Search", "Matrix", "Graph"],
+      "statement": {
+        "kind": "curated-summary",
+        "text": "Curated summary (not the official statement): fill each empty room with its distance to the nearest gate, walls block movement, gates are distance 0. See the official statement via sourceLink, or the freely accessible equivalent via alternativeSource.",
+        "officialStatement": "NOT INCLUDED — open sourceLink / alternativeSource."
+      },
+      "examplesIllustrative": [],
+      "judge": {
+        "mode": "exact",
+        "signature": {
+          "name": "wallsAndGates",
+          "params": [{ "name": "rooms", "type": "int[][]" }],
+          "return": "void"
+        },
+        "mutates": [0],
+        "tests": [
+          {
+            "args": ["[[0,-1],[2147483647,2147483647]]"],
+            "expected": "[[0,-1],[1,2]]",
+            "example": 1
+          },
+          {
+            "args": ["[[0,2147483647,2147483647],[2147483647,-1,2147483647],[2147483647,2147483647,0]]"],
+            "expected": "[[0,1,2],[1,-1,1],[2,1,0]]",
+            "example": 0
+          },
+          {
+            "args": ["[[2147483647]]"],
+            "expected": "[[2147483647]]",
+            "example": 0
+          },
+          {
+            "args": ["[[0]]"],
+            "expected": "[[0]]",
+            "example": 0
+          },
+          {
+            "args": ["[[0,-1],[2147483647,-1]]"],
+            "expected": "[[0,-1],[1,-1]]",
+            "example": 0
+          }
+        ]
+      },
+      "judgeProposal": {
+        "status": "promoted-from-staged-profile",
+        "signature": null,
+        "note": "No verified source interface in the local dataset (premium problem; in-place grid mutation). Worker folder walls-and-gates may propose a sketch later; overlay never executes it."
+      },
+      "features": { "walkthrough": false, "notes": false, "practice": false, "judge": false }
+    },
+    {
+      "slug": "number-of-connected-components-in-an-undirected-graph",
+      "title": "Number of Connected Components In An Undirected Graph",
+      "group": "Graphs",
+      "blind75": true,
+      "localRecord": false,
+      "overlayRecord": true,
+      "sourceLink": "https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/",
+      "alternativeSource": "https://www.lintcode.com/problem/3651/",
+      "difficultyCurated": "Medium",
+      "difficultyProvenance": "curated estimate from public practice ordering; not an official difficulty claim",
+      "patternCurated": "union-find",
+      "patternsCurated": ["union-find", "graph-dfs"],
+      "topicsCurated": ["Union Find", "Graph", "Depth-First Search"],
+      "statement": {
+        "kind": "curated-summary",
+        "text": "Curated summary (not the official statement): count how many connected components an undirected graph with n labelled nodes and an edge list has. See the official statement via sourceLink, or the freely accessible equivalent via alternativeSource.",
+        "officialStatement": "NOT INCLUDED — open sourceLink / alternativeSource."
+      },
+      "examplesIllustrative": [],
+      "judge": {
+        "mode": "exact",
+        "signature": {
+          "name": "countComponents",
+          "params": [{ "name": "n", "type": "int" }, { "name": "edges", "type": "int[][]" }],
+          "return": "int"
+        },
+        "tests": [
+          { "args": ["5", "[[0,1],[1,2],[3,4]]"], "expected": "2", "example": 1 },
+          { "args": ["5", "[[0,1],[1,2],[2,3],[3,4]]"], "expected": "1", "example": 1 },
+          { "args": ["1", "[]"], "expected": "1", "example": 0 },
+          { "args": ["4", "[[0,1]]"], "expected": "3", "example": 0 },
+          { "args": ["6", "[[0,1],[1,2],[2,0],[3,4]]"], "expected": "3", "example": 0 },
+          { "args": ["8", "[[0,1],[2,3],[3,4],[4,5],[6,7]]"], "expected": "3", "example": 0 },
+          { "args": ["2", "[]"], "expected": "2", "example": 0 },
+          { "args": ["4", "[[0,1],[2,3]]"], "expected": "2", "example": 0 }
+        ]
+      },
+      "judgeProposal": {
+        "status": "promoted-from-staged-profile",
+        "signature": null,
+        "note": "Promoted 2026-11-15 from delivery/judge-new-graphs judge-specs.mjs countComponents profile (int/int[][] exact; no harness change)."
+      },
+      "features": { "walkthrough": false, "notes": false, "practice": false, "judge": false }
+    },
+    {
+      "slug": "graph-valid-tree",
+      "title": "Graph Valid Tree",
+      "group": "Graphs",
+      "blind75": true,
+      "localRecord": false,
+      "overlayRecord": true,
+      "sourceLink": "https://leetcode.com/problems/graph-valid-tree/",
+      "alternativeSource": "https://www.lintcode.com/problem/178/",
+      "difficultyCurated": "Medium",
+      "difficultyProvenance": "curated estimate from public practice ordering; not an official difficulty claim",
+      "patternCurated": "union-find",
+      "patternsCurated": ["union-find", "graph-dfs"],
+      "topicsCurated": ["Union Find", "Graph", "Breadth-First Search"],
+      "statement": {
+        "kind": "curated-summary",
+        "text": "Curated summary (not the official statement): decide whether n nodes with an edge list form a valid tree (connected and acyclic). See the official statement via sourceLink, or the freely accessible equivalent via alternativeSource.",
+        "officialStatement": "NOT INCLUDED — open sourceLink / alternativeSource."
+      },
+      "examplesIllustrative": [],
+      "judge": {
+        "mode": "exact",
+        "signature": {
+          "name": "validTree",
+          "params": [{ "name": "n", "type": "int" }, { "name": "edges", "type": "int[][]" }],
+          "return": "boolean"
+        },
+        "tests": [
+          { "args": ["5", "[[0,1],[0,2],[0,3],[1,4]]"], "expected": "true", "example": 1 },
+          { "args": ["5", "[[0,1],[1,2],[2,3],[1,3],[1,4]]"], "expected": "false", "example": 2 },
+          { "args": ["1", "[]"], "expected": "true", "example": 0 },
+          { "args": ["2", "[]"], "expected": "false", "example": 0 },
+          { "args": ["2", "[[0,1]]"], "expected": "true", "example": 0 },
+          { "args": ["4", "[[0,1],[1,2],[2,3]]"], "expected": "true", "example": 0 },
+          { "args": ["4", "[[0,1],[1,2],[2,0]]"], "expected": "false", "example": 0 },
+          { "args": ["3", "[[0,1],[1,2],[0,2]]"], "expected": "false", "example": 0 },
+          { "args": ["4", "[[0,1],[2,3]]"], "expected": "false", "example": 0 }
+        ]
+      },
+      "judgeProposal": {
+        "status": "promoted-from-staged-profile",
+        "signature": null,
+        "note": "Promoted 2026-11-15 from delivery/judge-new-graphs judge-specs.mjs validTree profile (int/int[][] exact; no harness change)."
+      },
+      "features": { "walkthrough": false, "notes": false, "practice": false, "judge": false }
+    },
+    {
+      "slug": "alien-dictionary",
+      "title": "Alien Dictionary",
+      "group": "Advanced Graphs",
+      "blind75": true,
+      "localRecord": false,
+      "overlayRecord": true,
+      "sourceLink": "https://leetcode.com/problems/alien-dictionary/",
+      "alternativeSource": "https://www.lintcode.com/problem/892/",
+      "difficultyCurated": "Hard",
+      "difficultyProvenance": "curated estimate from public practice ordering; not an official difficulty claim",
+      "patternCurated": "topological-sort",
+      "patternsCurated": ["topological-sort", "graph-dfs"],
+      "topicsCurated": ["Topological Sort", "Graph", "String"],
+      "statement": {
+        "kind": "curated-summary",
+        "text": "Curated summary (not the official statement): recover the alien alphabet order implied by a sorted word list, or report that no valid order exists. See the official statement via sourceLink, or the freely accessible equivalent via alternativeSource.",
+        "officialStatement": "NOT INCLUDED — open sourceLink / alternativeSource."
+      },
+      "examplesIllustrative": [],
+      "judge": {
+        "mode": "any",
+        "signature": {
+          "name": "foreignDictionary",
+          "params": [{ "name": "words", "type": "string[]" }],
+          "return": "string"
+        },
+        "tests": [
+          { "args": ["[\"z\",\"o\"]"], "expected": "zo", "example": 1 },
+          { "args": ["[\"hrn\",\"hrf\",\"er\",\"enn\",\"rfnn\"]"], "expected": "hernf", "example": 2 },
+          { "args": ["[\"abc\",\"ab\"]"], "expected": "", "example": 3 },
+          { "args": ["[\"ab\",\"abc\"]"], "expected": "abc", "example": 0 },
+          { "args": ["[\"a\",\"b\",\"a\"]"], "expected": "", "example": 0 },
+          { "args": ["[\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]"], "expected": "wertf", "example": 0 },
+          { "args": ["[\"ab\",\"adc\",\"b\",\"cab\"]"], "expected": "abcd", "example": 0 },
+          { "args": ["[\"z\"]"], "expected": "z", "example": 0 }
+        ]
+      },
+      "judgeProposal": {
+        "status": "promoted-from-staged-profile",
+        "signature": null,
+        "note": "Promoted 2026-11-15 from delivery/judge-new-graphs judge-specs.mjs alien-dictionary profile (foreignDictionary(string[])->string mode:any property scoring; no official text reproduced)."
+      },
+      "features": { "walkthrough": false, "notes": false, "practice": false, "judge": false }
+    },
+    {
+      "slug": "meeting-rooms",
+      "title": "Meeting Rooms",
+      "group": "Intervals",
+      "blind75": true,
+      "localRecord": false,
+      "overlayRecord": true,
+      "sourceLink": "https://leetcode.com/problems/meeting-rooms/",
+      "alternativeSource": "https://www.lintcode.com/problem/920/",
+      "difficultyCurated": "Easy",
+      "difficultyProvenance": "curated estimate from public practice ordering; not an official difficulty claim",
+      "patternCurated": "intervals",
+      "patternsCurated": ["intervals", "sorting"],
+      "topicsCurated": ["Sorting", "Array"],
+      "statement": {
+        "kind": "curated-summary",
+        "text": "Curated summary (not the official statement): decide whether a person can attend all meetings given start/end intervals. See the official statement via sourceLink, or the freely accessible equivalent via alternativeSource.",
+        "officialStatement": "NOT INCLUDED — open sourceLink / alternativeSource."
+      },
+      "examplesIllustrative": [],
+      "judge": {
+        "mode": "exact",
+        "signature": {
+          "name": "canAttendMeetings",
+          "params": [{ "name": "intervals", "type": "int[][]" }],
+          "return": "boolean"
+        },
+        "tests": [
+          { "args": ["[[0,30],[5,10],[15,20]]"], "expected": "false", "example": 1 },
+          { "args": ["[[5,8],[9,15]]"], "expected": "true", "example": 1 },
+          { "args": ["[]"], "expected": "true", "example": 0, "note": "generated edge: empty schedule" },
+          { "args": ["[[1,4],[4,5]]"], "expected": "true", "example": 0, "note": "generated edge: boundary-touching endpoints share" },
+          { "args": ["[[1,10],[2,3]]"], "expected": "false", "example": 0, "note": "generated adversarial: nesting still overlaps" },
+          { "args": ["[[0,999999],[999999,1000000]]"], "expected": "true", "example": 0, "note": "generated edge: max-coordinate touching pair" }
+        ]
+      },
+      "judgeProposal": {
+        "status": "promoted-from-staged-profile",
+        "signature": null,
+        "note": "Promoted 2026-11-15 from delivery/judge-new-intervals profile meeting-rooms.json (int[][] transport; Interval-object form remains pedagogy-only). Worker folder meeting-rooms sketch reconciled to int[][] for executability."
+      },
+      "features": { "walkthrough": false, "notes": false, "practice": false, "judge": false }
+    },
+    {
+      "slug": "meeting-rooms-ii",
+      "title": "Meeting Rooms II",
+      "group": "Intervals",
+      "blind75": true,
+      "localRecord": false,
+      "overlayRecord": true,
+      "sourceLink": "https://leetcode.com/problems/meeting-rooms-ii/",
+      "alternativeSource": "https://www.lintcode.com/problem/919/",
+      "difficultyCurated": "Medium",
+      "difficultyProvenance": "curated estimate from public practice ordering; not an official difficulty claim",
+      "patternCurated": "intervals",
+      "patternsCurated": ["intervals", "heap-topk"],
+      "topicsCurated": ["Heap (Priority Queue)", "Sorting", "Array"],
+      "statement": {
+        "kind": "curated-summary",
+        "text": "Curated summary (not the official statement): compute the minimum number of rooms needed so all meetings fit. See the official statement via sourceLink, or the freely accessible equivalent via alternativeSource.",
+        "officialStatement": "NOT INCLUDED — open sourceLink / alternativeSource."
+      },
+      "examplesIllustrative": [],
+      "judge": {
+        "mode": "exact",
+        "signature": {
+          "name": "minMeetingRooms",
+          "params": [{ "name": "intervals", "type": "int[][]" }],
+          "return": "int"
+        },
+        "tests": [
+          { "args": ["[[0,40],[5,10],[15,20]]"], "expected": "2", "example": 1 },
+          { "args": ["[[4,9]]"], "expected": "1", "example": 2 },
+          { "args": ["[]"], "expected": "0", "example": 0, "note": "generated edge: empty schedule" },
+          { "args": ["[[0,5],[5,10],[10,15]]"], "expected": "1", "example": 0, "note": "generated edge: boundary-touching chain reuses one room" },
+          { "args": ["[[0,10],[2,5],[3,8]]"], "expected": "3", "example": 0, "note": "generated adversarial: nested triple stacks three rooms" },
+          { "args": ["[[0,1000000],[500000,600000]]"], "expected": "2", "example": 0, "note": "generated edge: constraint-scale bounds" }
+        ]
+      },
+      "judgeProposal": {
+        "status": "promoted-from-staged-profile",
+        "signature": null,
+        "note": "Promoted 2026-11-15 from delivery/judge-new-intervals profile meeting-rooms-ii.json (int[][] transport; Interval-object form remains pedagogy-only)."
+      },
+      "features": { "walkthrough": false, "notes": false, "practice": false, "judge": false }
+    }
+  ]
+}

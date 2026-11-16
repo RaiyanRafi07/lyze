@@ -1,0 +1,19 @@
+<Configuration>
+  <!-- Clean-room run: no network, host tools are NOT visible inside. -->
+  <Networking>Disable</Networking>
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>D:\Work\leedcode grind\desktop\target</HostFolder>
+      <SandboxFolder>C:\pkg</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+    <MappedFolder>
+      <HostFolder>D:\Work\leedcode grind\desktop\target\sandbox-out</HostFolder>
+      <SandboxFolder>C:\out</SandboxFolder>
+      <ReadOnly>false</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+  <LogonCommand>
+    <Command>powershell -ExecutionPolicy Bypass -File C:\pkg\sandbox-test.ps1</Command>
+  </LogonCommand>
+</Configuration>

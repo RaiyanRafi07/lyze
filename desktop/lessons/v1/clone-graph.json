@@ -1,0 +1,57 @@
+{
+ "slug": "clone-graph",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "cloneGraph",
+   "params": [
+    {
+     "name": "node",
+     "type": "GraphNode"
+    }
+   ],
+   "return": "GraphNode"
+  },
+  "tests": [
+   {
+    "args": [
+     "[[2,4],[1,3],[2,4],[1,3]]"
+    ],
+    "expected": "[[2,4],[1,3],[2,4],[1,3]]",
+    "example": 1
+   }
+  ],
+  "helpers": {
+   "java": "class __Custom { static Node __mkCustomGraph(int[][] adj) { if (adj.length == 0) return null; Node[] nodes = new Node[adj.length]; for (int i = 0; i < adj.length; i++) nodes[i] = new Node(i + 1); for (int i = 0; i < adj.length; i++) for (int nb : adj[i]) if (nb >= 1 && nb <= adj.length) nodes[i].neighbors.add(nodes[nb - 1]); return nodes[0]; } static String __outCustomGraph(Object v) { Node root = (Node) v; if (root == null) return \"[]\"; java.util.TreeMap<Integer, Node> byVal = new java.util.TreeMap<>(); java.util.ArrayDeque<Node> q = new java.util.ArrayDeque<>(); q.add(root); byVal.put(root.val, root); while (!q.isEmpty()) { Node node = q.poll(); for (Node nb : node.neighbors) if (!byVal.containsKey(nb.val)) { byVal.put(nb.val, nb); q.add(nb); } } StringBuilder sb = new StringBuilder(\"[\"); boolean first = true; for (Node node : byVal.values()) { if (!first) sb.append(\",\"); first = false; java.util.List<Integer> vs = new java.util.ArrayList<>(); for (Node nb : node.neighbors) vs.add(nb.val); java.util.Collections.sort(vs); String joined = vs.toString().replace(\" \", \"\"); sb.append(\"[\").append(joined.substring(1, joined.length() - 1)).append(\"]\"); } return sb.append(\"]\").toString(); } }",
+   "cpp": "static Node* __mkCustomGraph(std::vector<std::vector<int>> adj) { if (adj.empty()) return nullptr; std::vector<Node*> nodes; for (size_t i = 0; i < adj.size(); i++) nodes.push_back(new Node((int)i + 1)); for (size_t i = 0; i < adj.size(); i++) for (int nb : adj[i]) if (nb >= 1 && (size_t)nb <= adj.size()) nodes[i]->neighbors.push_back(nodes[(size_t)nb - 1]); return nodes[0]; } static std::string __customGraphOut(Node* root) { if (!root) return \"[]\"; std::map<int, Node*> byVal; std::deque<Node*> q; q.push_back(root); byVal[root->val] = root; while (!q.empty()) { Node* node = q.front(); q.pop_front(); for (Node* nb : node->neighbors) if (!byVal.count(nb->val)) { byVal[nb->val] = nb; q.push_back(nb); } } std::string out = \"[\"; bool first = true; for (auto& kv : byVal) { if (!first) out += \",\"; first = false; std::vector<int> vs; for (Node* nb : kv.second->neighbors) vs.push_back(nb->val); std::sort(vs.begin(), vs.end()); out += \"[\"; for (size_t i = 0; i < vs.size(); i++) { if (i) out += \",\"; out += std::to_string(vs[i]); } out += \"]\"; } return out + \"]\"; }"
+  }
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[[2,4],[1,3],[2,4],[1,3]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ],
+  "signature": {
+   "name": "cloneGraph",
+   "params": [
+    {
+     "name": "adjList",
+     "type": "int[][]"
+    }
+   ],
+   "return": "int[][]"
+  }
+ }
+}

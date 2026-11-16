@@ -1,0 +1,115 @@
+{
+ "slug": "design-add-and-search-words-data-structure",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "WordDictionary",
+   "params": [],
+   "return": "void"
+  },
+  "tests": [],
+  "sequences": [
+   {
+    "construct": [],
+    "calls": [
+     {
+      "method": "addWord",
+      "args": [
+       {
+        "type": "string",
+        "value": "bad"
+       }
+      ]
+     },
+     {
+      "method": "addWord",
+      "args": [
+       {
+        "type": "string",
+        "value": "dad"
+       }
+      ]
+     },
+     {
+      "method": "addWord",
+      "args": [
+       {
+        "type": "string",
+        "value": "mad"
+       }
+      ]
+     },
+     {
+      "method": "search",
+      "args": [
+       {
+        "type": "string",
+        "value": "pad"
+       }
+      ],
+      "returns": "boolean"
+     },
+     {
+      "method": "search",
+      "args": [
+       {
+        "type": "string",
+        "value": "bad"
+       }
+      ],
+      "returns": "boolean"
+     },
+     {
+      "method": "search",
+      "args": [
+       {
+        "type": "string",
+        "value": ".ad"
+       }
+      ],
+      "returns": "boolean"
+     },
+     {
+      "method": "search",
+      "args": [
+       {
+        "type": "string",
+        "value": "b.."
+       }
+      ],
+      "returns": "boolean"
+     }
+    ],
+    "expected": [
+     "null",
+     "null",
+     "null",
+     "false",
+     "true",
+     "true",
+     "true"
+    ],
+    "example": 1
+   }
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[\"WordDictionary\",\"addWord\",\"addWord\",\"addWord\",\"search\",\"search\",\"search\",\"search\"]",
+     "[[],[\"bad\"],[\"dad\"],[\"mad\"],[\"pad\"],[\"bad\"],[\".ad\"],[\"b..\"]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}

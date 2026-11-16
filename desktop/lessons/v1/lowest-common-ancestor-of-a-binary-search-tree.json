@@ -1,0 +1,51 @@
+{
+ "slug": "lowest-common-ancestor-of-a-binary-search-tree",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "lowestCommonAncestor",
+   "params": [
+    {
+     "name": "root",
+     "type": "TreeNode"
+    },
+    {
+     "name": "p",
+     "type": "TreeNode"
+    },
+    {
+     "name": "q",
+     "type": "TreeNode"
+    }
+   ],
+   "return": "TreeNode"
+  },
+  "tests": [
+   {
+    "args": [
+     "[6,2,8,0,4,7,9,null,null,3,5]",
+     "2",
+     "8"
+    ],
+    "expected": "[6,2,8,0,4,7,9,null,null,3,5]",
+    "example": 1
+   },
+   {
+    "args": [
+     "[6,2,8,0,4,7,9,null,null,3,5]",
+     "2",
+     "4"
+    ],
+    "expected": "[2,0,4,null,null,3,5]",
+    "example": 2
+   }
+  ]
+ }
+}

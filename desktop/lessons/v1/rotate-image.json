@@ -1,0 +1,63 @@
+{
+ "slug": "rotate-image",
+ "provenance": {
+  "kind": "curated-tests",
+  "sources": [
+   "plugin/data shards (statement, examples, snippets)"
+  ],
+  "note": "Curated deterministic judge spec authored for the native port; dataset records unchanged. Tests derived from dataset examples."
+ },
+ "judge": {
+  "mode": "exact",
+  "signature": {
+   "name": "rotate",
+   "params": [
+    {
+     "name": "matrix",
+     "type": "int[][]"
+    }
+   ],
+   "return": "void"
+  },
+  "tests": [
+   {
+    "args": [
+     "[[1,2,3],[4,5,6],[7,8,9]]"
+    ],
+    "expected": "[[[7,4,1],[8,5,2],[9,6,3]]]",
+    "example": 1
+   },
+   {
+    "args": [
+     "[[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]"
+    ],
+    "expected": "[[[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]]",
+    "example": 2
+   }
+  ],
+  "mutates": [
+   0
+  ]
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[[1,2,3],[4,5,6],[7,8,9]]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ],
+  "signature": {
+   "name": "rotate",
+   "params": [
+    {
+     "name": "matrix",
+     "type": "int[][]"
+    }
+   ],
+   "return": "void"
+  }
+ }
+}

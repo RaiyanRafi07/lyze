@@ -1,0 +1,114 @@
+{
+ "id": 269,
+ "slug": "alien-dictionary",
+ "title": "Alien Dictionary",
+ "difficulty": "Hard",
+ "topics": [
+  "String",
+  "Graph",
+  "Topological Sort"
+ ],
+ "pattern": "topological-sort",
+ "patterns": [
+  "topological-sort",
+  "strings",
+  "graph-dfs"
+ ],
+ "premium": false,
+ "description": "You are given words claimed to be lexicographically sorted under an unknown alphabet. Infer an ordering of all distinct letters from the list; any ordering that satisfies every adjacent pair is accepted. Return an empty string when no ordering can explain the list, including when a longer word precedes its own prefix.",
+ "examples": [
+  {
+   "n": 1,
+   "input": "words = [\"z\",\"o\"]",
+   "output": "\"zo\"",
+   "explain": "z is ordered before o; any consistent ordering scores full marks.",
+   "raw": "Input: words = [\"z\",\"o\"]\nOutput: \"zo\"\nExplanation: z is ordered before o; any consistent ordering scores full marks."
+  },
+  {
+   "n": 2,
+   "input": "words = [\"hrn\",\"hrf\",\"er\",\"enn\",\"rfnn\"]",
+   "output": "\"hernf\"",
+   "explain": "One ordering consistent with every adjacent pair.",
+   "raw": "Input: words = [\"hrn\",\"hrf\",\"er\",\"enn\",\"rfnn\"]\nOutput: \"hernf\"\nExplanation: One ordering consistent with every adjacent pair."
+  },
+  {
+   "n": 3,
+   "input": "words = [\"abc\",\"ab\"]",
+   "output": "\"\"",
+   "explain": "A longer word before its own prefix contradicts sorted order.",
+   "raw": "Input: words = [\"abc\",\"ab\"]\nOutput: \"\"\nExplanation: A longer word before its own prefix contradicts sorted order."
+  }
+ ],
+ "constraints": [
+  "1 <= words.length <= 100",
+  "1 <= words[i].length <= 100",
+  "words consist of lowercase English letters",
+  "any ordering satisfying all adjacent pairs is accepted"
+ ],
+ "follow_ups": [],
+ "hints": [
+  "Compare each adjacent pair only up to the first differing letter; that pair orders the two letters.",
+  "A longer word before its own prefix is impossible, so answer empty.",
+  "Topological order of the letter graph is a valid alphabet; cycles mean no answer."
+ ],
+ "snippets": {
+  "java": "class Solution {\n    public String foreignDictionary(String[] words) {\n        return \"\";\n    }\n}\n",
+  "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nclass Solution {\npublic:\n    string foreignDictionary(vector<string> words) {\n        return \"\";\n    }\n};\n"
+ },
+ "solution": "Turn first differing letters of adjacent words into precedence edges, then emit a topological order; a missing order means contradiction. Any valid order grades as correct.",
+ "judge": {
+  "mode": "any",
+  "signature": {
+   "name": "foreignDictionary",
+   "params": [
+    {
+     "name": "words",
+     "type": "string[]"
+    }
+   ],
+   "return": "string"
+  },
+  "tests": [
+   {
+    "args": [
+     "[\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]"
+    ],
+    "expected": "\"wertf\"",
+    "example": 1
+   },
+   {
+    "args": [
+     "[\"z\",\"o\"]"
+    ],
+    "expected": "\"zo\"",
+    "example": 2
+   },
+   {
+    "args": [
+     "[\"abc\",\"ab\"]"
+    ],
+    "expected": "\"\"",
+    "example": 3
+   }
+  ],
+  "validate": "alien-order"
+ },
+ "provenance": {
+  "kind": "independent-equivalent",
+  "sources": [
+   "https://neetcode.io/problems/foreign-dictionary/question?list=neetcode150"
+  ],
+  "note": "Statement authored from the brief for the native port; not copied. Generated tests are labeled. Ordering examples are one valid result each, not exact; property validation required."
+ },
+ "walkthrough": {
+  "tests": [
+   {
+    "args": [
+     "[\"wrt\",\"wrf\",\"er\",\"ett\",\"rftt\"]"
+    ],
+    "expected": "",
+    "example": 1
+   }
+  ]
+ }
+}
