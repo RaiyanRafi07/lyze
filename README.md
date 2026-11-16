@@ -35,9 +35,11 @@ So Lyze is native Rust (Iced), fully offline. The problem set, walkthroughs, and
 - **Practice mode** — 3 graded drills per lesson + fallback for every other judge-backed problem
 - **Progress + drafts** — spaced repetition tracking, all local in `%LOCALAPPDATA%`
 - **Trace view** — step through execution state visually
+- **Themes** — 16 built-ins (Dracula, Catppuccin, Night Owl, Tokyo Night, One Dark Pro, Monokai, Nord, GitHub Dark, VS Code Dark+/Light+) plus paste-any VS Code color-theme JSON to import your own
 
 ![Learn — walkthrough frames](docs/screenshots/learn.png)
 ![Practice — graded drills](docs/screenshots/practice.png)
+![Appearance — themes + VS Code import](docs/screenshots/appearance.png)
 
 ## Build from source
 
