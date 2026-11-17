@@ -43,6 +43,20 @@ So Lyze is native Rust (Iced), fully offline. The problem set, walkthroughs, and
 
 ## Build from source
 
+### Fresh clone? One command
+
+```powershell
+git clone https://github.com/RaiyanRafi07/lyze.git
+cd lyze
+pwsh setup.ps1
+```
+
+That checks prerequisites, pins Rust 1.89, downloads the two toolchain archives (~480 MB, cached under `desktop/target/vendor/` — GitHub rejects single files over 100 MB, so they download instead of shipping in git), builds the release exe, stages the portable tree, zips it, and runs the resource gate.
+
+What it can't bring back: `plugin/data/progress.json`, `*.local.json`, and `%LOCALAPPDATA%\LeetCodeLab` — your solved code and profile are never committed, so back those up separately before wiping a machine.
+
+### Manual (same steps setup.ps1 runs)
+
 You'll need Rust, the x64 MSVC linker, plus JDK and `g++` on `PATH` for the compiler-backed tests.
 
 ```powershell
